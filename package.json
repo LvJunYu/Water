@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "com.unity.mathematics": "1.1.0",
+    "com.unity.burst": "1.2.3",
+    "com.unity.render-pipelines.universal": "7.2.1"
+  },
+  "description": "Water System For URP.",
+  "displayName": "Water System",
+  "name": "water",
+  "version": "0.0.1"
+}

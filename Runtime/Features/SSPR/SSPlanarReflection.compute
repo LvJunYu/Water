@@ -1,0 +1,159 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Clear
+#pragma kernel Project
+#pragma kernel FillHole
+
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+#define MaxUInt 0xFFFFFFFF
+
+Texture2D<float4> _CameraDepthTexture;
+Texture2D<float4> _CameraColorTexture;
+float4 _Param1;
+float4 _Param2;
+RWStructuredBuffer<uint> _ReflectBuffer;
+RWTexture2D<float4> _SSPlanarReflectionTexture;
+#define _TexelSize float4(float2(1.0 / _Param1.x, 1.0 / _Param1.y), _Param1.xy)
+#define _WaterHeight _Param1.z
+#define _TexScale _Param1.w
+#define _StretchIntensity _Param2.x
+#define _StretchThreshold _Param2.y
+#define _CameraDirY _Param2.z
+
+float4 ComputeClipSpacePosition2(float2 positionNDC, float deviceDepth)
+{
+    #if defined(SHADER_API_GLCORE) || defined (SHADER_API_GLES) || defined (SHADER_API_GLES3)			// OpenGL平台 //
+    deviceDepth = deviceDepth * 2 - 1;
+    #endif
+    float4 positionCS = float4(positionNDC * 2.0 - 1.0, deviceDepth, 1.0);
+#if UNITY_UV_STARTS_AT_TOP
+    // Our world space, view space, screen space and NDC space are Y-up.
+    // Our clip space is flipped upside-down due to poor legacy Unity design.
+    // The flip is baked into the projection matrix, so we only have to flip
+    // manually when going from CS to NDC and back.
+    positionCS.y = -positionCS.y;
+#endif
+
+    return positionCS;
+}
+float3 ComputeWorldSpacePosition2(float2 positionNDC, float deviceDepth, float4x4 invViewProjMatrix)
+{
+    float4 positionCS  = ComputeClipSpacePosition2(positionNDC, deviceDepth);
+    float4 hpositionWS = mul(invViewProjMatrix, positionCS);
+    return hpositionWS.xyz / hpositionWS.w;
+}
+
+uint GetIndex(int2 id)
+{
+    return id.y * _TexelSize.z + id.x;
+}
+
+uint2 ClampId(int2 id)
+{
+    id.x = clamp(id.x, 0, _TexelSize.z);
+    id.y = clamp(id.y, 0, _TexelSize.w);
+    return id;
+}
+
+void GetNeighbor(uint2 id, out uint2 neighbor1, out uint2 neighbor2, out uint2 neighbor3, out uint2 neighbor4)
+{
+    const int2 offset1 = int2(1, 0); 
+    const int2 offset2 = int2(0, 1); 
+    const int2 offset3 = int2(-1, 0); 
+    const int2 offset4 = int2(0, -1); 
+    neighbor1 = ClampId(id + offset1);
+    neighbor2 = ClampId(id + offset2);
+    neighbor3 = ClampId(id + offset3);
+    neighbor4 = ClampId(id + offset4);
+}
+
+uint Encode(uint2 id)
+{
+    return id.y << 16 | id.x;
+}
+
+uint2 Decode(uint encode)
+{
+    return uint2(encode & 0xFFFF, encode >> 16);
+}
+
+uint2 GetScaleId(uint2 id)
+{
+    return uint2(id / _TexScale + 0.5);
+}
+
+[numthreads(8,8,1)]
+void Project (uint2 id : SV_DispatchThreadID)
+{
+	float2 uv = (id) * _TexelSize.xy;
+    uint2 curId = GetScaleId(id);
+    float depthSample = _CameraDepthTexture[curId].r;
+	float3 worldPos = ComputeWorldSpacePosition2(uv, depthSample, UNITY_MATRIX_I_VP);
+	
+	float depth = Linear01Depth(depthSample, _ZBufferParams);
+    if(depth > 0.9) return;
+    
+	if(worldPos.y > _WaterHeight)
+	{
+	    float3 reflPos = float3(worldPos.x, _WaterHeight * 2.0 - worldPos.y, worldPos.z);
+        float4 reflectScreenPos = ComputeScreenPos(TransformWorldToHClip(reflPos));
+	    float2 reflUv = reflectScreenPos.xy / reflectScreenPos.w;
+	    // stretch
+        reflUv.x = reflUv.x * 2.0 - 1.0;
+	    float HeightStretch = worldPos.y - _WaterHeight;
+        float AngleStretch = max(0, _CameraDirY);
+        float ScreenStretch = saturate(abs(reflUv.x) - _StretchThreshold);
+        reflUv.x *= 1 + HeightStretch * AngleStretch * ScreenStretch * _StretchIntensity;
+	    reflUv.x = reflUv.x * 0.5 + 0.5;
+	    // encode
+	    uint2 reflId = uint2(reflUv.xy * _TexelSize.zw + 0.5);
+	    uint reflIndex = GetIndex(reflId);
+        uint encodeId = Encode(curId);
+        InterlockedMin(_ReflectBuffer[reflIndex], encodeId);
+	}
+}
+
+[numthreads(8,8,1)]
+void FillHole (uint2 id : SV_DispatchThreadID)
+{
+    uint encodeId = _ReflectBuffer[GetIndex(id)];
+    uint2 neighbor1; 
+    uint2 neighbor2;
+    uint2 neighbor3;
+    uint2 neighbor4;
+    GetNeighbor(id, neighbor1, neighbor2, neighbor3, neighbor4);
+    uint id1 = _ReflectBuffer[GetIndex(neighbor1)];
+    uint id2 = _ReflectBuffer[GetIndex(neighbor2)];
+    uint id3 = _ReflectBuffer[GetIndex(neighbor3)];
+    uint id4 = _ReflectBuffer[GetIndex(neighbor4)];
+    uint minId = min(min(id1, id2), min(id3, id4));
+    uint2 decodeId = Decode(encodeId);
+    uint2 minDecodeId = Decode(minId);
+    //补没有颜色或远近穿插的洞
+    bool allowHoleFill = true;
+    if(encodeId != MaxUInt)
+    {
+        int2 offset = decodeId - minDecodeId;
+        const int minDist = 3;
+        
+        allowHoleFill = dot(offset, offset) > minDist * minDist;
+    }
+    
+    if(allowHoleFill)
+    {
+       decodeId = minDecodeId;
+       encodeId = minId;
+    }
+    
+    if(encodeId != MaxUInt)
+    {
+        _SSPlanarReflectionTexture[id] = _CameraColorTexture[decodeId];
+    }
+}
+
+[numthreads(8,8,1)]
+void Clear (uint2 id : SV_DispatchThreadID)
+{
+    _ReflectBuffer[GetIndex(id)] = MaxUInt;
+    _SSPlanarReflectionTexture[id] = 0;
+}
