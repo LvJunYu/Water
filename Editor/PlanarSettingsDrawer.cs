@@ -1,7 +1,7 @@
 ﻿// using UnityEngine;
 // using UnityEditor;
 //
-// namespace WaterSystem
+// namespace LYU.WaterSystem
 // {
 //     [CustomPropertyDrawer(typeof(PlanarReflections.PlanarReflectionSettings))]
 //     public class PlanarSettingsDrawer : PropertyDrawer

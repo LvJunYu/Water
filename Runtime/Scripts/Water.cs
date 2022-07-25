@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using WaterSystem.Data;
+using LYU.WaterSystem.Data;
 
-namespace WaterSystem
+namespace LYU.WaterSystem
 {
     [ExecuteAlways]
     public class Water : MonoBehaviour

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     public class RippleWaveEquation
     {

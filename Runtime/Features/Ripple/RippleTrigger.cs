@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using WaterSystem.Data;
+using LYU.WaterSystem.Data;
 
 [ExecuteAlways]
 public class RippleTrigger : MonoBehaviour

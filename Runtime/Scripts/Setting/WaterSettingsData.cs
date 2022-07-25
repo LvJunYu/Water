@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "SeaSettingsData", menuName = "WaterSystem/SeaSettings", order = 0)]

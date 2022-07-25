@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     public abstract class BaseWaterSettingEditor : PropertyDrawer
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 // ReSharper disable PossibleLossOfFraction
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [Serializable]
     [CustomPropertyDrawer(typeof(WaveSetting))]

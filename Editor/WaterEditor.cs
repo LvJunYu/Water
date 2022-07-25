@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
-using WaterSystem.Data;
+using LYU.WaterSystem.Data;
 
-namespace WaterSystem
+namespace LYU.WaterSystem
 {
     [CustomEditor(typeof(WaterSettingsData))]
     public class WaterSettingsDataEditor : Editor

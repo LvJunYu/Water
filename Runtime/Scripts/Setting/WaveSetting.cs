@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [Serializable]
     public class WaveSetting : WaterSettingItem

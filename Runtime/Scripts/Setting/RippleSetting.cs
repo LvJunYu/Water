@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [Serializable]
     public class RippleSetting : WaterSettingItem

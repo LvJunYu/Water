@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Object = UnityEngine.Object;
 
-namespace WaterSystem
+namespace LYU.WaterSystem
 {
     [ExecuteAlways]
     public class PlanarReflections : MonoBehaviour

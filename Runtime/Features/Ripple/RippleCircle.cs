@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     public class RippleCircle
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     public class WaterSettingItem
     {

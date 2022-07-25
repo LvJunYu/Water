@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using WaterSystem.Data;
+using LYU.WaterSystem.Data;
 
 public class RippleGenerateTex
 {

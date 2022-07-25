@@ -4,9 +4,9 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
-using WaterSystem.Data;
+using LYU.WaterSystem.Data;
 
-namespace WaterSystem
+namespace LYU.WaterSystem
 {
     /// <summary>
     /// C# Jobs system version of the Gerstner waves implimentation

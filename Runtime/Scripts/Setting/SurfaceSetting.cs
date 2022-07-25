@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [Serializable]
     public class SurfaceSetting : WaterSettingItem
@@ -45,15 +45,15 @@ namespace WaterSystem.Data
         public Gradient scatterRamp;
 
         public Boolean tripleNormalMap = false;
-        [ColorUsage(true, true)]
+        [ColorUsage(true, false)]
         public Color shallowColor = Color.white;
-        [ColorUsage(true, true)]
+        [ColorUsage(true, false)]
         public Color deepColor = Color.black;
         public Boolean additionColor = false;
         public Single additionRange = 0;
-        [ColorUsage(true, true)]
+        [ColorUsage(true, false)]
         public Color additionColor1 = Color.black;
-        [ColorUsage(true, true)]
+        [ColorUsage(true, false)]
         public Color additionColor2 = Color.black;
 
         [SerializeField] private Texture2D _rampTexture;

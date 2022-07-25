@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 
-namespace WaterSystem
+namespace LYU.WaterSystem
 {
     public class BuoyantObject : MonoBehaviour
     {

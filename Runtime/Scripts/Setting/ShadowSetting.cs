@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace WaterSystem.Data
+namespace LYU.WaterSystem.Data
 {
     [Serializable]
     public class ShadowSetting : WaterSettingItem
