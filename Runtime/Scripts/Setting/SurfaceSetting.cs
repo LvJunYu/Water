@@ -29,7 +29,7 @@ namespace LYU.WaterSystem.Data
         public float surfaceSize = 1f;
         public Vector2 speed = new Vector2(1, 1);
         public float bumpScale2 = 0.2f;
-        public float surfaceSize2 = 4f;
+        public float surfaceSize2 = 2f;
         public Vector2 speed2 = new Vector2(-2, -2);
         public float bumpScale3 = 0.2f;
         public float surfaceSize3 = 4f;

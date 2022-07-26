@@ -11,7 +11,7 @@ float3 NormalBlend_UnpackedRNM(float3 n1, float3 n2)
     return normalize(n1 * dot(n1, n2) / n1.z - n2);
 }
 
-half SampleFlowMap(float4 INuv, float2 INuv2, out half3 detailBump, out half3 normalWS)
+half SampleFlowMap(float4 INuv, float2 vertexUV, out half3 detailBump, out half3 normalWS)
 {
     float2 offset1 = float2(0.418, 0.355);
     float2 offset2 = float2(0.865, 0.148);
@@ -32,7 +32,7 @@ half SampleFlowMap(float4 INuv, float2 INuv2, out half3 detailBump, out half3 no
     //return float4(nor, 1);
     float time = frac(_Time.y * _FlowSpeed);
     float time2 = frac(_Time.y * _FlowSpeed + 0.5);
-    half3 flowmap = SAMPLE_TEXTURE2D(_FlowMap, sampler_FlowMap, INuv2.xy).xyz;
+    half3 flowmap = SAMPLE_TEXTURE2D(_FlowMap, sampler_FlowMap, vertexUV).xyz;
     //return float4(flowmap, 1);
     flowmap.xy = flowmap.xy * 2 - 1;
     flowmap.xy *= float2(1, -1);

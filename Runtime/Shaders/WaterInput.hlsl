@@ -4,51 +4,50 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-half4 _DitherPattern_TexelSize;
-
+float4 _DitherPattern_TexelSize;
 float4 _WaterParam1;
-float4 _WaterParam2;
-float4 _SurfaceParam;
-float4 _SurfaceParam2;
-float4 _SubsurfaceParam;
-float4 _SurfaceParam4;
-float4 _SurfaceParam5;
-float4 _ReflectionParam;
-float4 _ShadowParam;
-float4 _FoamParam;
-float4 _FoamParam2;
-float4 _FoamParam3;
-half3 _FoamColor;
-float4 _CausticsParam1;
+half4 _WaterParam2;
+half4 _SurfaceParam;
+half4 _SurfaceParam2;
+half4 _SubsurfaceParam;
+half4 _SurfaceParam4;
+half4 _SurfaceParam5;
+half4 _ReflectionParam;
+half4 _ShadowParam;
+half4 _FoamParam;
+half4 _FoamParam2;
+half4 _FoamParam3;
+half4 _FoamColor;
+half4 _CausticsParam1;
 
-float4 _RippleParam;
-float4 _RippleParam2;
-float4 _RippleParam3;
-float4 _RippleParam4;
-uint _RippleCount;
-float4 _RippleRange;
+half4 _RippleParam;
+half4 _RippleParam2;
+half4 _RippleParam3;
+half4 _RippleParam4;
+half4 _RippleRange;
 
-float4 _WaveParam;
+half4 _WaveParam;
 
 half4 _SubSurfaceColor;
+uint _RippleCount;
 
 //flow map
-float _FlowMapScale;
-float _FlowNormalSize;
-float _FlowSpeed;
-float _FoamMetallic;
-float _FoamSpecular;
-float _FoamSmoothness;
-float _FoamIntensity2;
+half _FlowMapScale;
+half _FlowNormalSize;
+half _FlowSpeed;
+half _FoamMetallic;
+half _FoamSpecular;
+half _FoamSmoothness;
+half _FoamIntensity2;
 half4 _FoamColor2;
 half4 _ShallowColor;
 half4 _DeepColor;
-float _HModifier;
-float _AdditionRange;
+half _HModifier;
+half _AdditionRange;
 half4 _AdditionColor1;
 half4 _AdditionColor2;
 
-float2 MarchParam;
+half2 MarchParam;
 CBUFFER_END
 
 #define _SubSurfaceSunFallOff _SubsurfaceParam.x
@@ -126,6 +125,7 @@ CBUFFER_END
 
 SAMPLER(sampler_ScreenTextures_linear_clamp);
 SAMPLER(sampler_ScreenTextures_linear_repeat);
+
 #if defined(_REFLECTION_PLANARREFLECTION)
 TEXTURE2D(_PlanarReflectionTexture);
 #elif defined(_REFLECTION_CUBEMAP)
@@ -135,7 +135,7 @@ SAMPLER(sampler_CubemapTexture);
 TEXTURE2D(_SSPlanarReflectionTexture);
 #endif
 
-TEXTURE2D(_CameraDepthTexture);
+TEXTURE2D_FLOAT(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
 TEXTURE2D(_CameraOpaqueTexture);

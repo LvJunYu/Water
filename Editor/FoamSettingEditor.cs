@@ -31,7 +31,7 @@ namespace LYU.WaterSystem.Data
                     var basicFoam = property.FindPropertyRelative("basicFoam");
                     EditorGUILayout.Slider(shallowsHeight, 0, 1, "岸边高度");
                     EditorGUILayout.PropertyField(foamMap, foamMapStr);
-                    EditorGUILayout.Slider(foamParam1, 0, 1, "Foam Map Tiling");
+                    EditorGUILayout.Slider(foamParam1, 0, 10, "Foam Map Tiling");
                     EditorGUILayout.Slider(foamParam2, 0, 0.1f, "Foam Map Noise");
                     EditorGUILayout.PropertyField(bakedDepthTex, bakedDepthTexStr);
                     if (!bakedDepthTex.objectReferenceValue)

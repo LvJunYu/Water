@@ -48,25 +48,26 @@ namespace LYU.WaterSystem.Data
                     EditorGUILayout.PropertyField(surfaceMap, surfaceMapStr);
                     EditorGUI.indentLevel++;
                     EditorGUILayout.BeginVertical("box");
-                    EditorGUILayout.Slider(bumpScale, 0f, 2f, "法线强度1");
-                    EditorGUILayout.Slider(surfaceSize, 0f, 10f, "波纹大小1");
-                    speed.vector2Value = EditorGUILayout.Vector2Field("波纹速度2", speed.vector2Value);
+                    EditorGUILayout.Slider(bumpScale, 0f, 2f, "Bump 1 Intensity");
+                    EditorGUILayout.Slider(surfaceSize, 0f, 1f, "Bump 1 Tiling");
+                    speed.vector2Value = EditorGUILayout.Vector2Field("Bump 1 Speed", speed.vector2Value);
                     EditorGUILayout.EndVertical();
 
                     EditorGUILayout.BeginVertical("box");
-                    EditorGUILayout.Slider(bumpScale2, 0f, 2f, "法线强度2");
-                    EditorGUILayout.Slider(surfaceSize2, 0f, 10f, "波纹大小2");
-                    speed2.vector2Value = EditorGUILayout.Vector2Field("波纹速度2", speed2.vector2Value);
+                    EditorGUILayout.Slider(bumpScale2, 0f, 2f, "Bump 2 Intensity");
+                    EditorGUILayout.Slider(surfaceSize2, 0f, 1f, "Bump 2 Tiling");
+                    speed2.vector2Value = EditorGUILayout.Vector2Field("Bump 2 Speed", speed2.vector2Value);
                     EditorGUILayout.EndVertical();
-                    
+
                     EditorGUILayout.BeginVertical("box");
                     EditorGUILayout.PropertyField(tripleNormalMap, tripleNormalMapStr);
-                    if(tripleNormalMap.boolValue)
+                    if (tripleNormalMap.boolValue)
                     {
-                        EditorGUILayout.Slider(bumpScale3, 0f, 2f, "法线强度3");
-                        EditorGUILayout.Slider(surfaceSize3, 0f, 10f, "波纹大小3");
-                        speed3.vector2Value = EditorGUILayout.Vector2Field("波纹速度3", speed3.vector2Value);
+                        EditorGUILayout.Slider(bumpScale3, 0f, 2f, "Bump 3 Intensity");
+                        EditorGUILayout.Slider(surfaceSize3, 0f, 4f, "Bump 3 Tiling");
+                        speed3.vector2Value = EditorGUILayout.Vector2Field("Bump 3 Speed", speed3.vector2Value);
                     }
+
                     EditorGUILayout.EndVertical();
                     EditorGUI.indentLevel--;
                     break;
@@ -91,17 +92,18 @@ namespace LYU.WaterSystem.Data
             EditorGUILayout.Space();
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.PropertyField(additionColor, additionColorStr);
-            if(additionColor.boolValue)
+            if (additionColor.boolValue)
             {
                 EditorGUILayout.Slider(additionRange, 0, 10, "补色远近范围");
                 EditorGUILayout.PropertyField(additionColor1, additionColor1Str);
                 EditorGUILayout.PropertyField(additionColor2, additionColor2Str);
             }
+
             EditorGUILayout.EndHorizontal();
             scartterType.enumValueIndex = GUILayout.Toolbar(scartterType.enumValueIndex, scartterTypeEnum);
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.Slider(waterMaxVisibility, 0, 300, waterMaxVisibilityStr);
-            switch ((EScartterType)scartterType.enumValueIndex)
+            switch ((EScartterType) scartterType.enumValueIndex)
             {
                 case EScartterType.Simple:
                     EditorGUILayout.PropertyField(shallowColor, shallowColorStr);
@@ -114,8 +116,8 @@ namespace LYU.WaterSystem.Data
                                             "颜色条带代表深度从浅到深的颜色变化，最右的深度值对应参数【最大深度】", MessageType.Info);
                     break;
             }
-            EditorGUILayout.EndVertical();
 
+            EditorGUILayout.EndVertical();
         }
 
         private void FlowmapDraw(SerializedProperty property)
@@ -152,7 +154,7 @@ namespace LYU.WaterSystem.Data
             }
         }
 
-        private static readonly GUIContent surfaceMapStr = new GUIContent("法线贴图", "RG通道");
+        private static readonly GUIContent surfaceMapStr = new GUIContent("Bump Map(XY)", "Bump Map(XY)");
 
         private static readonly GUIContent flowMapStr = new GUIContent("流向图");
         private static readonly GUIContent flowNormalStr = new GUIContent("流向法线");
@@ -163,7 +165,7 @@ namespace LYU.WaterSystem.Data
         private static readonly GUIContent absorptionRampStr = new GUIContent("吸收颜色", absorpRampTT);
         private static readonly GUIContent scatterRampStr = new GUIContent("散射颜色", scatterRampTT);
 
-        private static readonly GUIContent tripleNormalMapStr = new GUIContent("是否使用3法线设置");
+        private static readonly GUIContent tripleNormalMapStr = new GUIContent("Enable Bump 3");
         private static readonly GUIContent shallowColorStr = new GUIContent("浅水颜色");
         private static readonly GUIContent deepColorStr = new GUIContent("深水颜色");
         private static readonly GUIContent additionColorStr = new GUIContent("是否使用补色");

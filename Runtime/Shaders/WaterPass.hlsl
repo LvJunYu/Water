@@ -40,13 +40,14 @@ struct WaterVertexInput
 
 struct WaterVertexOutput
 {
-    float4 uv : TEXCOORD0; // xy: tiling uv 1, zw: ting uv 2
-    float4 uv2 : TEXCOORD1; // xy: vertex uv, zw: ting uv 3
+    float4 uv : TEXCOORD0; // xy: uv 1, zw: uv 2
+    float4 uv2 : TEXCOORD1; // xy: uv 3, zw: foamUV
     float4 posWSFog : TEXCOORD2;
-    float3 normal : NORMAL;
     float4 posVSwaveHeight : TEXCOORD3;
     float4 viewDirNoise : TEXCOORD4;
     float4 screenPos : TEXCOORD5;
+    float2 vertexUV : TEXCOORD6;
+    float3 normal : NORMAL;
 
     float4 clipPos : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -62,14 +63,16 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     UNITY_TRANSFER_INSTANCE_ID(v, o);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-    output.uv2.xy = v.texcoord;
+    output.vertexUV = v.texcoord;
     output.posWSFog.xyz = TransformObjectToWorld(v.vertex.xyz);
     output.normal = float3(0, 1, 0);
     float2 time = _Time.y * _BumpSpeed;
     float3 worldPos = output.posWSFog.xyz;
     #if _Wave_Enable
-    output.viewDirNoise.w = ((noise((worldPos.xz * 0.5) + time) + noise((worldPos.xz) + time)) * 0.25 - 0.5) + 1;
+    output.viewDirNoise.w = ((noise((worldPos.xz * 50) + time) + noise((worldPos.xz * 100) + time)) * 0.25 - 0.5) + 1;
     #endif
+    
+    output.uv2.zw = worldPos.xz * 0.1 * _FoamFactor1 + time * 0.05 + output.viewDirNoise.w * 0.1;
 
     #ifdef _FlowMap_Enable
     {
@@ -84,7 +87,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 
         #ifdef _TRIPLE_NORMAL
             float2 time3 = _Time.y * _BumpSpeed3;
-            output.uv2.zw = worldPos.xz * 0.1 * _SurfaceSize3 + time3 * 0.05 + (output.viewDirNoise.w * 0.1);
+            output.uv2.xy = worldPos.xz * 0.1 * _SurfaceSize3 + time3 * 0.05 + (output.viewDirNoise.w * 0.1);
         #endif
     }
 
@@ -171,7 +174,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     #if _BumpMap_Enable | _FlowMap_Enable
     {
     #ifdef _FlowMap_Enable
-        foamLerp = SampleFlowMap(IN.uv, IN.uv2, detailBump, IN.normal);
+        foamLerp = SampleFlowMap(IN.uv, IN.vertexUV, detailBump, IN.normal);
     #else
         detailBump = GetDetailNormal(depth.x, IN);
         IN.normal = blend_rnm(IN.normal.xzy, detailBump).xzy;
@@ -191,7 +194,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     half3 foam = 0;
     #if _Foam_Sea | _Foam_River
     {
-        float2 foamUv = IN.uv.zw * _FoamFactor1 + detailBump.xy * 0.0025;
+        float2 foamUv = IN.uv2.zw * _FoamFactor1 + detailBump.xy * 0.0025;
     #if _Foam_Sea
         half foamMask = SeaFoam(foamUv, depth.x, depth.y, IN.posVSwaveHeight.w, IN.viewDirNoise.w);
     #elif _Foam_River
