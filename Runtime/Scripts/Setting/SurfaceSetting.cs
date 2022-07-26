@@ -45,16 +45,12 @@ namespace LYU.WaterSystem.Data
         public Gradient scatterRamp;
 
         public Boolean tripleNormalMap = false;
-        [ColorUsage(true, false)]
-        public Color shallowColor = Color.white;
-        [ColorUsage(true, false)]
-        public Color deepColor = Color.black;
+        [ColorUsage(true, false)] public Color shallowColor = new Color(1, 1, 1, 0);
+        [ColorUsage(true, false)] public Color deepColor = Color.black;
         public Boolean additionColor = false;
         public Single additionRange = 0;
-        [ColorUsage(true, false)]
-        public Color additionColor1 = Color.black;
-        [ColorUsage(true, false)]
-        public Color additionColor2 = Color.black;
+        [ColorUsage(true, false)] public Color additionColor1 = Color.black;
+        [ColorUsage(true, false)] public Color additionColor2 = Color.black;
 
         [SerializeField] private Texture2D _rampTexture;
         private const int rampWidth = 128;
@@ -119,7 +115,7 @@ namespace LYU.WaterSystem.Data
                     material.SetTexture(_SurfaceMap, surfaceMap);
                     material.SetVector(_SurfaceParam, new Vector4(surfaceSize, bumpScale, speed.x, speed.y));
                     material.SetVector(_SurfaceParam4, new Vector4(surfaceSize2, bumpScale2, speed2.x, speed2.y));
-                    if(tripleNormalMap)
+                    if (tripleNormalMap)
                     {
                         material.SetVector(_SurfaceParam5, new Vector4(surfaceSize3, bumpScale3, speed3.x, speed3.y));
                         material.EnableKeyword("_TRIPLE_NORMAL");
@@ -128,6 +124,7 @@ namespace LYU.WaterSystem.Data
                     {
                         material.DisableKeyword("_TRIPLE_NORMAL");
                     }
+
                     break;
                 case EBumpType.Flowmap:
                     material.DisableKeyword("_BumpMap_Enable");
@@ -152,6 +149,7 @@ namespace LYU.WaterSystem.Data
                     material.SetColor(_FoamColor, foamColor);
                     break;
             }
+
             switch (scartterType)
             {
                 case EScartterType.Simple:
@@ -163,11 +161,12 @@ namespace LYU.WaterSystem.Data
                     material.DisableKeyword("_SIMPLE_SCATTER");
                     break;
             }
+
             material.SetTexture(AbsorptionScatteringRamp, _rampTexture);
             material.SetVector(_SurfaceParam2, new Vector4(edge, specularClamp, specularIntensity, distort));
             material.SetFloat(_SpecularRange, specularRange);
 
-            if(additionColor)
+            if (additionColor)
             {
                 material.SetFloat(_AdditionRange, additionRange);
                 material.SetColor(_AdditionColor1, additionColor1);
@@ -231,6 +230,7 @@ namespace LYU.WaterSystem.Data
         private static readonly int _SurfaceMap = Shader.PropertyToID("_SurfaceMap");
 
         private static readonly int _FlowMap = Shader.PropertyToID("_FlowMap");
+
         //private static readonly int _FlowMapTiling = Shader.PropertyToID("_FlowMapTiling");
         private static readonly int _FlowMapScale = Shader.PropertyToID("_FlowMapScale");
         private static readonly int _FlowNormal = Shader.PropertyToID("_FlowNormal");

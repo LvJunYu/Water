@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 public class DepthFetch
 {
     public static Texture2D GetDepth(Vector3 pos, float deltaHeight, float orthographicSize, float waterMaxVisibility,
-        Shader depthCopyShader)
+        Shader depthCopyShader, string savePath)
     {
         //Generate the camera
         GameObject go = new GameObject("depthCamera"); //create the cameraObject
@@ -71,8 +71,8 @@ public class DepthFetch
 #if UNITY_EDITOR
         // save depth tex to asset
         byte[] image = bakedDepthTex.EncodeToPNG();
-        var path = Application.dataPath + "/WaterDepth.png";
-        var assetPath = "Assets/WaterDepth.png";
+        var path = savePath.Replace("Assets", Application.dataPath);
+        var assetPath = savePath;
         System.IO.File.WriteAllBytes(path, image);
         AssetDatabase.Refresh();
         TextureImporter importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;

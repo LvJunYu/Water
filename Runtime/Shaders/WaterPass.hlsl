@@ -264,30 +264,33 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     half3 diffuse;
     #ifdef _SIMPLE_SCATTER
     {
-        half3 shoalColor = lerp(refraction, refraction * _ShallowColor.rgb, saturate(depth.x * depthMulti));
-        diffuse = lerp(_DeepColor.rgb, shoalColor, saturate(exp2(-depth.x * depthMulti)));
+        half4 color = lerp(_ShallowColor, _DeepColor, saturate(depth.x * depthMulti));
+        diffuse = lerp(refraction, color.rgb, color.a) * lightColor;
+        // half3 shoalColor = lerp(refraction, refraction * _ShallowColor.rgb, saturate(depth.x * depthMulti));
+        // diffuse = lerp(_DeepColor.rgb, shoalColor, saturate(exp2(-depth.x * depthMulti)));
     }
     #else
     {
         refraction *= Absorption(depth.x * depthMulti);
-        half3 sss = lightColor * Scattering(depth.x * depthMulti);
-        half subsurfaceInstance = max(0, IN.posVSwaveHeight.w + _SubSurfaceScale);
-        sss += SubSurfaceLighting(viewDir, mainLight.direction, subsurfaceInstance, shadow, mainLight.color);
-        diffuse = refraction + sss;
+        half3 scattering = lightColor * Scattering(depth.x * depthMulti);
+        diffuse = refraction + scattering;
     }
+    #endif
     
+    half subsurfaceInstance = max(0, IN.posVSwaveHeight.w + _SubSurfaceScale);
+    diffuse += SubSurfaceLighting(viewDir, mainLight.direction, subsurfaceInstance, shadow, mainLight.color);
+
     #ifdef _ADDITION_COLOR
         diffuse += lerp(_AdditionColor1, _AdditionColor2, saturate(fresnelTerm * _AdditionRange));
     #endif
-    
-    #endif
+
     #if _Foam_Sea | _Foam_River
         //diffuse *= 1 - saturate(foam);
 	    diffuse += foam; //lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
     #endif
 
     half3 color = diffuse + spec;
-    
+
     //边缘过度
     color = lerp(refraction, color, 1 - saturate(1 - depth.x * _EdgeRange));
 

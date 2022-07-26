@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using LYU.WaterSystem.Data;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LYU.WaterSystem
 {
@@ -127,13 +130,20 @@ namespace LYU.WaterSystem
         }
 
 #if UNITY_EDITOR
-        [ContextMenu("获取高度图")]
+        [ContextMenu("Bake Height Map of Sea Bed")]
         public void CaptureDepthMap()
         {
+            var samePath = GetSamePathWithObj(waterMaterial, "_SeaBedHeightMap.png");
             settingsData.foamSetting.bakedDepthTex = DepthFetch.GetDepth(transform.position, deltaHeight,
-                orthographicSize,
-                settingsData.surfaceSetting.waterMaxVisibility, settingsData.depthCopyShader);
+                orthographicSize, settingsData.surfaceSetting.waterMaxVisibility, settingsData.depthCopyShader, samePath);
             Refresh();
+        }
+        
+        string GetSamePathWithObj(Object mat, string name)
+        {
+            var path = AssetDatabase.GetAssetPath(mat);
+            var extendName = System.IO.Path.GetExtension(path);
+            return path.Replace(extendName, name);
         }
 #endif
 

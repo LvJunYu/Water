@@ -39,10 +39,10 @@ MonoBehaviour:
     speed3: {x: -2, y: -2}
     distort: 0.8
     edge: 1
-    specularClamp: 1024
-    waterMaxVisibility: 20
+    specularClamp: 5
+    waterMaxVisibility: 136
     specularIntensity: 1
-    specularRange: 1
+    specularRange: 0
     absorptionRamp:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
@@ -102,8 +102,8 @@ MonoBehaviour:
       m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     tripleNormalMap: 0
-    shallowColor: {r: 1, g: 1, b: 1, a: 1}
-    deepColor: {r: 0.012341244, g: 0.2158475, b: 0.49056602, a: 1}
+    shallowColor: {r: 0.0494776, g: 0.255, b: 0.24358208, a: 0.84313726}
+    deepColor: {r: 0.19954053, g: 0.276, b: 0.2387027, a: 1}
     additionColor: 0
     additionRange: 0
     additionColor1: {r: 0, g: 0, b: 0, a: 1}
@@ -134,14 +134,14 @@ MonoBehaviour:
     shadowIntensity: 1
     shadowJitter: 0
   foamSetting:
-    fold: 0
+    fold: 1
     foamEnable: 1
     foamType: 0
     foamMap: {fileID: 2800000, guid: ca439406e806ecf44a9586510be9477d, type: 3}
     noiseMap: {fileID: 0}
     foamColor: {r: 1, g: 1, b: 1, a: 1}
-    foamIntensity: 1
-    shallowsHeight: 1
+    foamIntensity: 0.547
+    shallowsHeight: 0.121
     foamParam5: 1
     foamParam6: 1
     foamParam7: 1
@@ -178,7 +178,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     defaultFoamRamp: {fileID: 2800000, guid: 4098762bce32f44b9b7c56531d1a988e, type: 3}
-    bakedDepthTex: {fileID: 0}
+    bakedDepthTex: {fileID: 2800000, guid: c43ec77bfe2a7f94d8f7a9d4c568f6fe, type: 3}
   waveSetting:
     fold: 1
     waveEnable: 1
@@ -187,64 +187,64 @@ MonoBehaviour:
     sharpness: 2
     _waves: []
     _customWaves: 0
-    randomSeed: 3234
+    randomSeed: 18810
     _basicWaveSettings:
       numWaves: 10
-      amplitude: 0.7
-      direction: 45
-      wavelength: 5
+      amplitude: 2.18
+      direction: 95
+      wavelength: 16.1
     _waveArray:
-    - amplitude: 0.32720426
-      direction: 75.61283
-      wavelength: 2.7429316
+    - amplitude: 1.14293
+      direction: 89.52667
+      wavelength: 10.915955
       speed: 1
-    - amplitude: 0.4989629
-      direction: 34.46022
-      wavelength: 2.9401314
+    - amplitude: 1.1485057
+      direction: 91.5995
+      wavelength: 6.767732
       speed: 1
-    - amplitude: 0.3941591
-      direction: 74.027145
-      wavelength: 2.558075
+    - amplitude: 1.630724
+      direction: 65.31481
+      wavelength: 11.236334
       speed: 1
-    - amplitude: 0.57812643
-      direction: 56.10583
-      wavelength: 4.117716
+    - amplitude: 1.6518792
+      direction: 109.53667
+      wavelength: 17.774057
       speed: 1
-    - amplitude: 0.56045854
-      direction: 31.84439
-      wavelength: 6.0789065
+    - amplitude: 2.306735
+      direction: 86.893715
+      wavelength: 13.346883
       speed: 1
-    - amplitude: 0.6334655
-      direction: 14.250145
-      wavelength: 5.3407955
+    - amplitude: 2.1069472
+      direction: 53.543945
+      wavelength: 18.50832
       speed: 1
-    - amplitude: 0.8724062
-      direction: 12.960335
-      wavelength: 3.7447684
+    - amplitude: 1.9908383
+      direction: 93.4982
+      wavelength: 14.663822
       speed: 1
-    - amplitude: 0.83922017
-      direction: 56.75344
-      wavelength: 4.3630257
+    - amplitude: 2.8495963
+      direction: 75.35083
+      wavelength: 12.441821
       speed: 1
-    - amplitude: 0.9118087
-      direction: 68.477684
-      wavelength: 8.480039
+    - amplitude: 2.4395888
+      direction: 59.94835
+      wavelength: 21.463871
       speed: 1
-    - amplitude: 0.8492898
-      direction: 34.09925
-      wavelength: 9.210968
+    - amplitude: 3.4170196
+      direction: 64.14173
+      wavelength: 24.406979
       speed: 1
-    _maxWaveHeight: 0.64651024
+    _maxWaveHeight: 2.0684762
     subSurfaceEnable: 1
-    subSurfaceColor: {r: 0, g: 1, b: 1, a: 1}
-    subSurfaceSunFallOff: 5
+    subSurfaceColor: {r: 0, g: 0.637, b: 0.637, a: 1}
+    subSurfaceSunFallOff: 4.41
     subSurfaceBase: 0.3
-    subSurfaceSun: 3
-    subSurfaceScale: 0.6
+    subSurfaceSun: 1.84
+    subSurfaceScale: 0.403
     testUv: 1
   causticsSetting:
     fold: 0
-    causticsEnable: 1
+    causticsEnable: 0
     causticsTexture: {fileID: 2800000, guid: a7f2820670809ba4a9fb58e1db8f3994, type: 3}
     causticsIntensity: 1
     causticsSize: 0.29
