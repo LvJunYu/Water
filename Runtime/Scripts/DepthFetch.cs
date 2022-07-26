@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 public class DepthFetch
 {
     public static Texture2D GetDepth(Vector3 pos, float deltaHeight, float orthographicSize, float waterMaxVisibility,
-        Shader depthCopyShader, string savePath)
+        string savePath)
     {
         //Generate the camera
         GameObject go = new GameObject("depthCamera"); //create the cameraObject
@@ -19,7 +19,7 @@ public class DepthFetch
         {
             cameraData = depthCam.gameObject.AddComponent<UniversalAdditionalCameraData>();
         }
-        
+
         cameraData.renderShadows = false;
         cameraData.requiresColorOption = CameraOverrideOption.Off;
         cameraData.requiresDepthOption = CameraOverrideOption.Off;
@@ -32,8 +32,8 @@ public class DepthFetch
         depthCam.orthographic = true;
         depthCam.orthographicSize = orthographicSize; //hardcoded = 1k area - TODO
         //_depthCam.depthTextureMode = DepthTextureMode.Depth;
-        depthCam.nearClipPlane = 0.1f;
-        depthCam.farClipPlane = waterMaxVisibility + 0;
+        depthCam.nearClipPlane = 0f;
+        depthCam.farClipPlane = waterMaxVisibility + deltaHeight;
         depthCam.allowHDR = false;
         depthCam.allowMSAA = false;
         depthCam.cullingMask = LayerMask.GetMask("SeaFloor");
@@ -53,7 +53,7 @@ public class DepthFetch
         //do depth capture
         depthCam.targetTexture = tempTex;
         depthCam.Render();
-
+        var depthCopyShader = Shader.Find("Hidden/Hidden/Water/CopyDepth");
         var copyMat = new Material(depthCopyShader);
         Graphics.Blit(tempTex, tempTex2, copyMat);
         depthCam.enabled = false;

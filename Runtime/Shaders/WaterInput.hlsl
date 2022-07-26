@@ -60,11 +60,12 @@ CBUFFER_END
 
 #define _WaterCenterPos _WaterParam1.xyz
 #define _WaterLevel _WaterParam1.y
+#define _WaterMaxVerticalHeight _WaterParam1.w
 
-#define _MaxDepth _WaterParam2.x
+#define _MaxViewDepth _WaterParam2.x
 #define _MaxWaveHeight _WaterParam2.y
-#define _DepthTexCameraHeight _WaterParam2.z
-#define _DepthTexTiling 1.0 / _WaterParam2.w
+#define _HeighMapCameraAboveWaterHeight _WaterParam2.z
+#define _HeighMapSizeInverse 1.0 / _WaterParam2.w
 
 #define _SurfaceSize _SurfaceParam.x
 #define _BumpScale _SurfaceParam.y

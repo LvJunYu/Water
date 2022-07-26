@@ -13,32 +13,33 @@ half3 Absorption(float depth)
     return SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_ScreenTextures_linear_clamp, half2(depth, 0.0)).rgb;
 }
 
-float2 AdjustedDepth(float rawD, float3 viewDir, float3 posVS)
+float WaterViewDepth(float rawD, float3 viewDir, float3 posVS)
 {
     float d = LinearEyeDepth(rawD, _ZBufferParams);
-    float depthPos = d * length(posVS / posVS.z); //海底距离相机的距离
-    float waterPos = length(viewDir); //水面距离相机得距离
-    return float2(depthPos - waterPos, (rawD * -_ProjectionParams.x) + (1 - UNITY_REVERSED_Z));
+    float depthPos = d * length(posVS / posVS.z); // distance from camera to ground
+    float waterPos = length(viewDir); // distance from camera to water
+    return depthPos - waterPos;
 }
 
-float2 AdjustedDepth(float2 uvs, float3 viewDir, float3 posVS)
+float WaterViewDepth(float2 uvs, float3 viewDir, float3 posVS)
 {
     float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uvs);
-    return AdjustedDepth(rawD, viewDir, posVS);
+    return WaterViewDepth(rawD, viewDir, posVS);
 }
 
-float WaterTextureDepth(float3 posWS)
+float WaterVerticalDepth(float3 posWS)
 {
-    half2 depthUv = (posWS.xz - _WaterCenterPos.xz) * _DepthTexTiling * 0.5 + 0.5;
-    return (1 - SAMPLE_TEXTURE2D_LOD(_SeaBedHeightMap, sampler_ScreenTextures_linear_clamp, depthUv, 1).r);
+    half2 depthUv = (posWS.xz - _WaterCenterPos.xz) * _HeighMapSizeInverse * 0.5 + 0.5;
+    return (1 - SAMPLE_TEXTURE2D_LOD(_SeaBedHeightMap, sampler_ScreenTextures_linear_clamp, depthUv, 2).r)
+        * (_WaterMaxVerticalHeight + _HeighMapCameraAboveWaterHeight) - _HeighMapCameraAboveWaterHeight;
 }
 
-float3 WaterDepth(float3 posWS, float rawD, float3 viewDir, float3 posVS)
+float2 WaterViewDepthAndVerticalDepth(float3 posWS, float rawD, float3 viewDir, float3 posVS)
 {
-    float3 outDepth = 0;
-    outDepth.xz = AdjustedDepth(rawD, viewDir, posVS);
-    float wd = WaterTextureDepth(posWS) * 19.1;
-    outDepth.y = (wd - 3.5) + posWS.y - _WaterLevel;
+    float2 outDepth = 0;
+    outDepth.x = WaterViewDepth(rawD, viewDir, posVS);
+    float verticalDepth = WaterVerticalDepth(posWS);
+    outDepth.y = verticalDepth + posWS.y - _WaterLevel;
     return outDepth;
 }
 
@@ -109,7 +110,7 @@ half3 SampleReflections(half3 positionWS, half3 normalWS, half3 viewDirectionWS,
 
 half3 DirectSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half3 viewDirectionWS, float HModifier)
 {
-    float3 halfDir = SafeNormalize(float3(lightDirectionWS)+float3(viewDirectionWS) + float3(0, HModifier, 0));
+    float3 halfDir = SafeNormalize(float3(lightDirectionWS) + float3(viewDirectionWS) + float3(0, HModifier, 0));
     float NoH = saturate(dot(normalWS, halfDir));
 
     half LoH = saturate(dot(lightDirectionWS, halfDir));
@@ -132,10 +133,10 @@ half3 DirectSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, 
     // On platforms where half actually means something, the denominator has a risk of overflow
     // clamp below was added specifically to "fix" that, but dx compiler (we convert bytecode to metal/gles)
     // sees that specularTerm have only non-negative terms, so it skips max(0,..) in clamp (leaving only min(100,...))
-#if defined (SHADER_API_MOBILE) || defined (SHADER_API_SWITCH)
+    #if defined (SHADER_API_MOBILE) || defined (SHADER_API_SWITCH)
     specularTerm = specularTerm - HALF_MIN;
     specularTerm = clamp(specularTerm, 0.0, 100.0); // Prevent FP16 overflow on mobiles
-#endif
+    #endif
     half3 specularColor = specularTerm * brdfData.specular;
 
     //DEBUG_ASSIGN_VECTOR4(Direct_Specular, float4(specularColor, 1));

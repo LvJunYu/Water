@@ -20,7 +20,7 @@ namespace LYU.WaterSystem.Data
         public BasicWaves _basicWaveSettings = new BasicWaves(1.5f, 45.0f, 5.0f);
 
         [SerializeField] public Wave[] waveArray;
-        [SerializeField] private ComputeBuffer _waveBuffer;
+        private ComputeBuffer _waveBuffer;
         private bool useComputeBuffer;
         public float maxWaveHeight;
 

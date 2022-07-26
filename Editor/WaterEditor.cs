@@ -19,6 +19,15 @@ namespace LYU.WaterSystem
             serializedObject.Update();
             Water w = (Water) target;
             EditorGUI.BeginChangeCheck();
+            var waterRangeData = serializedObject.FindProperty("waterRangeData");
+            EditorGUILayout.PropertyField(waterRangeData);
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+                w.CaptureDepthMap();
+            }
+            
+            EditorGUI.BeginChangeCheck();
             var waterMaterial = serializedObject.FindProperty("waterMaterial");
             EditorGUILayout.PropertyField(waterMaterial);
             if (EditorGUI.EndChangeCheck())

@@ -80,16 +80,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SeaBedHeightMap:
+        m_Texture: {fileID: 2800000, guid: 2bc8877f55e2a6e4b9a578a292f8169f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SurfaceMap:
         m_Texture: {fileID: 2800000, guid: a7f2820670809ba4a9fb58e1db8f3994, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SeaBedHeightMap:
-        m_Texture: {fileID: 2800000, guid: c43ec77bfe2a7f94d8f7a9d4c568f6fe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -136,8 +136,8 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _FoamColor2: {r: 0, g: 0, b: 0, a: 0}
-    - _FoamParam: {r: 0.547, g: 0.121, b: 1, a: 1}
-    - _FoamParam2: {r: 1, g: 1, b: 0, a: 0}
+    - _FoamParam: {r: 1, g: 0, b: 1, a: 1}
+    - _FoamParam2: {r: 0.083, g: 0, b: 0, a: 0}
     - _FoamParam3: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectionParam: {r: 2, g: 1, b: 1, a: 0}
     - _RippleParam: {r: 0.5, g: 0.5, b: 1, a: 3}
@@ -155,8 +155,8 @@ Material:
     - _SurfaceParam3: {r: 6, g: 0.3, b: 2, a: 0.5}
     - _SurfaceParam4: {r: 4, g: 0.2, b: -2, a: -2}
     - _SurfaceParam5: {r: 0, g: 0, b: 0, a: 0}
-    - _WaterParam1: {r: 0, g: 19, b: 0, a: 0}
-    - _WaterParam2: {r: 136, g: 2.0684762, b: 4, a: 250}
+    - _WaterParam1: {r: 274, g: 19, b: 116, a: 0}
+    - _WaterParam2: {r: 130, g: 1.7933121, b: 4, a: 500}
     - _WaveParam: {r: 0, g: 2, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5412220319678400035

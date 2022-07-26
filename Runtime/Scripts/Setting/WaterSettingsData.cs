@@ -13,8 +13,6 @@ namespace LYU.WaterSystem.Data
         public WaveSetting waveSetting = new WaveSetting();
         public CausticsSetting causticsSetting = new CausticsSetting();
         public RippleSetting rippleSetting = new RippleSetting();
-        [HideInInspector] public Shader depthCopyShader;
-        [HideInInspector] public Shader waterShader;
 
         public void SetMaterial(Material material)
         {

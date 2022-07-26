@@ -40,13 +40,13 @@ struct WaterVertexInput
 
 struct WaterVertexOutput
 {
-    float4 uv : TEXCOORD0;
-    float4 posWSFog : TEXCOORD1;
+    float4 uv : TEXCOORD0; // xy: tiling uv 1, zw: ting uv 2
+    float4 uv2 : TEXCOORD1; // xy: vertex uv, zw: ting uv 3
+    float4 posWSFog : TEXCOORD2;
     float3 normal : NORMAL;
-    float4 posVSwaveHeight : TEXCOORD2;
-    float4 viewDirNoise : TEXCOORD3;
-    float4 screenPos : TEXCOORD4;
-    float4 uv2 : TEXCOORD5;
+    float4 posVSwaveHeight : TEXCOORD3;
+    float4 viewDirNoise : TEXCOORD4;
+    float4 screenPos : TEXCOORD5;
 
     float4 clipPos : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -55,8 +55,13 @@ struct WaterVertexOutput
 
 #include "WaterCommon.hlsl"
 
-void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
+WaterVertexOutput WaterVertex(WaterVertexInput v)
 {
+    WaterVertexOutput output = (WaterVertexOutput)0;
+    UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_TRANSFER_INSTANCE_ID(v, o);
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
     output.uv2.xy = v.texcoord;
     output.posWSFog.xyz = TransformObjectToWorld(v.vertex.xyz);
     output.normal = float3(0, 1, 0);
@@ -85,15 +90,15 @@ void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
 
     #endif
 
-    half waterDepth = WaterTextureDepth(output.posWSFog.xyz) * 19.1 - 4.1;
+    half verticalDepth = WaterVerticalDepth(output.posWSFog.xyz);
     #if _Foam_Sea
-    output.posWSFog.y += saturate((1-waterDepth) * 0.6 - 0.5) * _ShallowsHeight; //根据海底深度修正海面高低
+    output.posWSFog.y += saturate((1-verticalDepth) * 0.6 - 0.5) * _ShallowsHeight; //根据海底深度修正海面高低
     #endif
 
     //Gerstner here
     #if _Wave_Enable
 	WaveStruct wave;
-	SampleWaves(worldPos, saturate((waterDepth * 0.25)) + 0.1, wave, v.texcoord); //用垂直水深做mask，浅潭海浪小，深海海浪大
+	SampleWaves(worldPos, saturate((verticalDepth * 0.25)) + 0.1, wave, v.texcoord); //用垂直水深做mask，浅潭海浪小，深海海浪大
     output.normal = normalize(wave.normal.xzy);
     output.posWSFog.xyz += wave.position;
 	output.posVSwaveHeight.w = wave.position.y / _MaxWaveHeight; // encode the normalized wave height into additional data
@@ -102,7 +107,7 @@ void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
     #if _Ripple_WaveEquation
 	float2 rippleUv = (output.posWSFog.xz - _RippleCenter) / _RippleSize * 0.5 + 0.5;
 	float rippleHeight = SAMPLE_TEXTURE2D_LOD(_RippleHeightTex, sampler_ScreenTextures_linear_clamp, rippleUv, 0).r;
-	float mask = min(0.5, waterDepth * 0.25);
+	float mask = min(0.5, saturate(verticalDepth * 0.25));
 	output.posWSFog.y += clamp(rippleHeight * 0.5, -mask, mask);
     #endif
 
@@ -116,17 +121,7 @@ void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
     // distance blend
     half distanceBlend = saturate(length((_WorldSpaceCameraPos.xz - output.posWSFog.xz) * 0.005) - 0.25);
     output.normal = lerp(output.normal, half3(0, 1, 0), distanceBlend); //越远越平，250米远是平的
-}
-
-WaterVertexOutput WaterVertex(WaterVertexInput v)
-{
-    WaterVertexOutput o = (WaterVertexOutput)0;
-    UNITY_SETUP_INSTANCE_ID(v);
-    UNITY_TRANSFER_INSTANCE_ID(v, o);
-    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
-    WaveVertexOperations(v, o);
-    return o;
+    return output;
 }
 
 half4 WaterFragment(WaterVertexOutput IN) : SV_Target
@@ -146,9 +141,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     // depth
     half3 screenUV = IN.screenPos.xyz / IN.screenPos.w; //screen UVs
     float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV.xy);
-    float3 depth = WaterDepth(worldPos, rawD, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
+    float2 depth = WaterViewDepthAndVerticalDepth(worldPos, rawD, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
     // TODO - hardcoded shore depth UVs
-
+// return saturate((depth.y * 0.5));
+    
     // shadow
     half shadow = 1;
     #if _Shadow_Enable | _ShadowJitter_Enable
@@ -187,7 +183,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     // distortion
     half2 distortionUV = screenUV.xy + DistortionUVs(depth.x, IN.normal) * _Distortion; // * clamp(depth.x, 0, 5);
     float d = depth.x;
-    depth.xz = AdjustedDepth(distortionUV, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
+    depth.x = WaterViewDepth(distortionUV, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
     distortionUV = depth.x < 0 ? screenUV.xy : distortionUV;
     depth.x = depth.x < 0 ? d : depth.x;
 
@@ -201,7 +197,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     #elif _Foam_River
         half foamMask = RiverFoam(foamUv, depth.x);
     #endif
-        return half4(foamMask.xxx,1);
+        // return half4(foamMask.xxx,1);
         foam = (foamMask * _FoamIntensity) * _FoamColor * (shadow * mainLight.color + GI);
     }
     #endif
@@ -237,17 +233,17 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     #endif
 
     // diffuse
-    half depthMulti = 1 / _MaxDepth;
+    half depthInverse = 1 / _MaxViewDepth;
     half3 diffuse;
     #ifdef _SIMPLE_SCATTER
     {
-        half4 scatterColor = lerp(_ShallowColor, _DeepColor, saturate(depth.x * depthMulti));
+        half4 scatterColor = lerp(_ShallowColor, _DeepColor, saturate(depth.x * depthInverse));
         diffuse = lerp(refraction, scatterColor.rgb, scatterColor.a) * lightColor;
     }
     #else
     {
-        refraction *= Absorption(depth.x * depthMulti);
-        half3 scattering = lightColor * Scattering(depth.x * depthMulti);
+        refraction *= Absorption(depth.x * depthInverse);
+        half3 scattering = lightColor * Scattering(depth.x * depthInverse);
         diffuse = refraction + scattering;
     }
     #endif

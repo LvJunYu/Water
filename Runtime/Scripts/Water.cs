@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using LYU.WaterSystem.Data;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,11 +12,10 @@ namespace LYU.WaterSystem
     [ExecuteAlways]
     public class Water : MonoBehaviour
     {
+        [SerializeField] public WaterRangeData waterRangeData;
         [SerializeField] public Material waterMaterial;
         [SerializeField] public WaterSettingsData settingsData;
         public const int WaterLayer = 4;
-        const float deltaHeight = 4f;
-        const float orthographicSize = 250;
         static HashSet<Water> waters = new HashSet<Water>();
 
         void OnValidate()
@@ -91,10 +92,10 @@ namespace LYU.WaterSystem
             if (waterMaterial == null) return;
             if (settingsData == null) return;
             settingsData.SetMaterial(waterMaterial);
-
-            waterMaterial.SetVector(WaterParam1, transform.position);
+            var pos = transform.position;
+            waterMaterial.SetVector(WaterParam1, new Vector4(pos.x,pos.y,pos.z, waterRangeData.maxWaterVerticalDepth));
             waterMaterial.SetVector(WaterParam2, new Vector4(settingsData.surfaceSetting.waterMaxVisibility,
-                settingsData.waveSetting.maxWaveHeight, deltaHeight, orthographicSize));
+                settingsData.waveSetting.maxWaveHeight, waterRangeData.deltaHeight, waterRangeData.orthographicSize));
         }
 
         public void Refresh()
@@ -134,8 +135,8 @@ namespace LYU.WaterSystem
         public void CaptureDepthMap()
         {
             var samePath = GetSamePathWithObj(waterMaterial, "_SeaBedHeightMap.png");
-            settingsData.foamSetting.bakedDepthTex = DepthFetch.GetDepth(transform.position, deltaHeight,
-                orthographicSize, settingsData.surfaceSetting.waterMaxVisibility, settingsData.depthCopyShader, samePath);
+            settingsData.foamSetting.bakedDepthTex = DepthFetch.GetDepth(transform.position, waterRangeData.deltaHeight,
+                waterRangeData.orthographicSize, waterRangeData.maxWaterVerticalDepth, samePath);
             Refresh();
         }
         
@@ -149,5 +150,13 @@ namespace LYU.WaterSystem
 
         private static readonly int WaterParam1 = Shader.PropertyToID("_WaterParam1");
         private static readonly int WaterParam2 = Shader.PropertyToID("_WaterParam2");
+    }
+
+    [Serializable]
+    public class WaterRangeData
+    {
+        public float maxWaterVerticalDepth = 100f;
+        public float deltaHeight = 4f;
+        public float orthographicSize = 250;
     }
 }
