@@ -101,7 +101,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     //Gerstner here
     #if _Wave_Enable
 	WaveStruct wave;
-	SampleWaves(worldPos, saturate((verticalDepth * 0.25)) + 0.1, wave, v.texcoord); //用垂直水深做mask，浅潭海浪小，深海海浪大
+	SampleWaves(worldPos, saturate((verticalDepth * 0.5)) + 0.1, wave, v.texcoord); //用垂直水深做mask，浅潭海浪小，深海海浪大
     output.normal = normalize(wave.normal.xzy);
     output.posWSFog.xyz += wave.position;
 	output.posVSwaveHeight.w = wave.position.y / _MaxWaveHeight; // encode the normalized wave height into additional data
@@ -146,7 +146,6 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV.xy);
     float2 depth = WaterViewDepthAndVerticalDepth(worldPos, rawD, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
     // TODO - hardcoded shore depth UVs
-// return saturate((depth.y * 0.5));
     
     // shadow
     half shadow = 1;

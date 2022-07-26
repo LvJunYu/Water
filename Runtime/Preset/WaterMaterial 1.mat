@@ -16,7 +16,6 @@ Material:
   - _REFLECTION_PLANARREFLECTION
   - _SIMPLE_SCATTER
   - _Shadow_Enable
-  - _TRIPLE_NORMAL
   - _Wave_Enable
   m_InvalidKeywords:
   - _Ripple_Enable
@@ -113,7 +112,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HModifier: 0.171
+    - _HModifier: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _QueueOffset: 0
@@ -138,7 +137,7 @@ Material:
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _FoamColor2: {r: 0, g: 0, b: 0, a: 0}
     - _FoamParam: {r: 1, g: 1, b: 1, a: 1}
-    - _FoamParam2: {r: 1, g: 0.0466, b: 0, a: 0}
+    - _FoamParam2: {r: 1, g: 0.29, b: 1, a: 0.73}
     - _FoamParam3: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectionParam: {r: 2, g: 1, b: 1, a: 0}
     - _RippleParam: {r: 0.5, g: 0.5, b: 1, a: 3}
@@ -152,12 +151,12 @@ Material:
     - _SubSurfaceColor: {r: 0, g: 0.637, b: 0.637, a: 1}
     - _SubsurfaceParam: {r: 4.41, g: 0.3, b: 1.84, a: 0.403}
     - _SurfaceParam: {r: 0.228, g: 0.33, b: 0, a: 1}
-    - _SurfaceParam2: {r: 1, g: 50, b: 0.51, a: 0.8}
+    - _SurfaceParam2: {r: 1, g: 20, b: 0.26, a: 0.8}
     - _SurfaceParam3: {r: 6, g: 0.3, b: 2, a: 0.5}
     - _SurfaceParam4: {r: 0.147, g: 0.21, b: 0, a: -0.5}
-    - _SurfaceParam5: {r: 0.84, g: 0, b: -0.2, a: -1}
+    - _SurfaceParam5: {r: 0.22, g: 0.2, b: -0.2, a: -1}
     - _WaterParam1: {r: 274, g: 19, b: 116, a: 100}
-    - _WaterParam2: {r: 40, g: 1.7933121, b: 4, a: 675}
+    - _WaterParam2: {r: 40, g: 1.7933121, b: 4, a: 300}
     - _WaveParam: {r: 0, g: 2, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5412220319678400035

@@ -84,11 +84,11 @@ namespace LYU.WaterSystem.Data
                     break;
             }
 
-            EditorGUILayout.Slider(distort, 0f, 2f, "折射扭曲");
-            EditorGUILayout.Slider(edge, 0.5f, 3f, "边缘过度");
-            EditorGUILayout.Slider(specularIntensity, 0, 2, "高光强度");
-            EditorGUILayout.Slider(specularClamp, 0, 1024, "高光Clamp");
-            EditorGUILayout.Slider(specularRange, 0, 1, "高光范围修正");
+            EditorGUILayout.Slider(distort, 0f, 2f, "Refract Distortion");
+            EditorGUILayout.Slider(edge, 0.01f, 2f, "Shore Transition");
+            EditorGUILayout.Slider(specularIntensity, 0, 2, "Specular Intensity");
+            EditorGUILayout.Slider(specularClamp, 0, 1024, "Specular Clamp");
+            EditorGUILayout.Slider(specularRange, 0, 1, "Specular Range");
             EditorGUILayout.Space();
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.PropertyField(additionColor, additionColorStr);

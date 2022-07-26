@@ -16,7 +16,11 @@ namespace LYU.WaterSystem.Data
             var foamIntensity = property.FindPropertyRelative("foamIntensity");
             var foamParam1 = property.FindPropertyRelative("foamParam1");
             var foamParam2 = property.FindPropertyRelative("foamParam2");
-
+            var foamParam3 = property.FindPropertyRelative("foamParam3");
+            var foamParam4 = property.FindPropertyRelative("foamParam4");
+            var foamParam5 = property.FindPropertyRelative("foamParam5");
+            var foamParam6 = property.FindPropertyRelative("foamParam6");
+            
             foamEnable.boolValue = EditorGUILayout.Toggle("泡沫开关", foamEnable.boolValue);
             EditorGUILayout.Slider(foamIntensity, 0, 2, "泡沫强度");
             EditorGUILayout.PropertyField(foamColor, foamColorStr);
@@ -29,10 +33,14 @@ namespace LYU.WaterSystem.Data
                     var bakedDepthTex = property.FindPropertyRelative("bakedDepthTex");
                     var defaultFoamRamp = property.FindPropertyRelative("defaultFoamRamp");
                     var basicFoam = property.FindPropertyRelative("basicFoam");
-                    EditorGUILayout.Slider(shallowsHeight, 0, 1, "岸边高度");
+                    EditorGUILayout.Slider(shallowsHeight, 0, 1, "Shore Range Expansion");
                     EditorGUILayout.PropertyField(foamMap, foamMapStr);
                     EditorGUILayout.Slider(foamParam1, 0, 10, "Foam Map Tiling");
-                    EditorGUILayout.Slider(foamParam2, 0, 0.1f, "Foam Map Noise");
+                    EditorGUILayout.Slider(foamParam2, 0, 2f, "Shore Wave Tiling");
+                    EditorGUILayout.Slider(foamParam3, 0, 2f, "Shore Wave Speed");
+                    EditorGUILayout.Slider(foamParam4, 0, 2f, "Shore Wave Gradient");
+                    EditorGUILayout.Slider(foamParam5, 0, 2f, "Foam Param 5");
+                    EditorGUILayout.Slider(foamParam6, 0, 2f, "Foam Param 6");
                     EditorGUILayout.PropertyField(bakedDepthTex, bakedDepthTexStr);
                     if (!bakedDepthTex.objectReferenceValue)
                         EditorGUILayout.HelpBox("点击Water脚本右上角【获取高度图】进行Bake\nBake前需要把海底物体的Layer设置成SeaFloor",
@@ -42,10 +50,6 @@ namespace LYU.WaterSystem.Data
                     break;
                 case EFoamType.RiverFoam:
                     var noiseMap = property.FindPropertyRelative("noiseMap");
-                    var foamParam3 = property.FindPropertyRelative("foamParam3");
-                    var foamParam4 = property.FindPropertyRelative("foamParam4");
-                    var foamParam5 = property.FindPropertyRelative("foamParam5");
-                    var foamParam6 = property.FindPropertyRelative("foamParam6");
                     var foamParam7 = property.FindPropertyRelative("foamParam7");
                     var foamParam8 = property.FindPropertyRelative("foamParam8");
                     var foamParam9 = property.FindPropertyRelative("foamParam9");
@@ -87,9 +91,9 @@ namespace LYU.WaterSystem.Data
         private static readonly string[] foamTypeEnum = {"海水泡沫", "河水泡沫"};
         private static readonly GUIContent foamColorStr = new GUIContent("泡沫颜色");
         private static readonly GUIContent foamMapStr2 = new GUIContent("泡沫贴图(RG)");
-        private static readonly GUIContent foamMapStr = new GUIContent("泡沫贴图(RGB)");
-        private static readonly GUIContent bakedDepthTexStr = new GUIContent("高度图", "Editor下点击Water脚本右上角获取高度图");
-        private static readonly GUIContent defaultFoamRampStr = new GUIContent("泡沫Ramp贴图");
+        private static readonly GUIContent foamMapStr = new GUIContent("Foam Map(RGB)");
+        private static readonly GUIContent bakedDepthTexStr = new GUIContent("Height Map", "Editor下点击Water脚本右上角获取高度图");
+        private static readonly GUIContent defaultFoamRampStr = new GUIContent("Foam Ramp Map");
         private static readonly GUIContent noiseMapStr = new GUIContent("噪声图");
     }
 }

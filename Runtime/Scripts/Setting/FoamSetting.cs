@@ -44,17 +44,18 @@ namespace LYU.WaterSystem.Data
             {
                 case EFoamType.SeaFoam:
                     material.SetTexture(_SeaBedHeightMap, bakedDepthTex);
-                    material.SetVector(_FoamParam2, new Vector4(foamParam1, foamParam2));
+                    material.SetVector(_FoamParam2, new Vector4(foamParam1, foamParam2, foamParam3, foamParam4));
+                    material.SetVector(_FoamParam, new Vector4(foamIntensity, shallowsHeight, foamParam5, foamParam6));
                     break;
                 case EFoamType.RiverFoam:
                     material.SetVector(_FoamParam2, new Vector4(foamParam1, foamParam2, 1f / foamParam3, foamParam4));
+                    material.SetVector(_FoamParam, new Vector4(foamIntensity, shallowsHeight, 1f / foamParam5, foamParam6));
                     material.SetVector(_FoamParam3, new Vector4(foamParam7, foamParam8, foamParam9, foamParam10));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            material.SetVector(_FoamParam, new Vector4(foamIntensity, shallowsHeight, 1f / foamParam5, foamParam6));
             material.SetColor(_FoamColor, foamColor);
             if (foamEnable && foamIntensity > 0.01f && foamColor != Color.black)
             {

@@ -30,7 +30,8 @@ float WaterViewDepth(float2 uvs, float3 viewDir, float3 posVS)
 float WaterVerticalDepth(float3 posWS)
 {
     half2 depthUv = (posWS.xz - _WaterCenterPos.xz) * _HeighMapSizeInverse * 0.5 + 0.5;
-    return (1 - SAMPLE_TEXTURE2D_LOD(_SeaBedHeightMap, sampler_ScreenTextures_linear_clamp, depthUv, 2).r)
+    // Todo : Compute LOD
+    return (1 - SAMPLE_TEXTURE2D_LOD(_SeaBedHeightMap, sampler_ScreenTextures_linear_clamp, depthUv, 3).r)
         * (_WaterMaxVerticalHeight + _HeighMapCameraAboveWaterHeight) - _HeighMapCameraAboveWaterHeight;
 }
 
