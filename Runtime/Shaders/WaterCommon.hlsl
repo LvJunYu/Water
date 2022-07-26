@@ -93,4 +93,28 @@ float3 blend_unity(float3 n1, float3 n2)
     return normalize(r);
 }
 
+half3 GetDetailNormal(float depth, WaterVertexOutput IN)
+{
+    half3 detailBump = 0;
+    float detailScale = saturate(depth.x * 0.25);
+    float3 detailBump1, detailBump2;
+    detailBump1.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv.zw).xy * 2 - 1;
+    detailBump2.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv.xy).xy * 2 - 1;
+    detailBump1.xy *= detailScale * _BumpScale;
+    detailBump2.xy *= detailScale * _BumpScale2;
+    detailBump1.z = sqrt(1.0 - saturate(dot(detailBump1.xy, detailBump1.xy)));
+    detailBump2.z = sqrt(1.0 - saturate(dot(detailBump2.xy, detailBump2.xy)));
+   #ifdef _TRIPLE_NORMAL
+        float3 detailBump3;
+        detailBump3.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv2.zw).xy * 2 - 1;
+        detailBump3.xy *= detailScale * _BumpScale3;
+        detailBump3.z = sqrt(1.0 - saturate(dot(detailBump3.xy, detailBump3.xy)));
+        detailBump = blend_whiteout(detailBump1, detailBump2, detailBump3);
+    #else
+        detailBump = blend_whiteout(detailBump1, detailBump2);
+    #endif
+
+    return detailBump;
+}
+
 #endif // COMMON_UTILITIES_INCLUDED

@@ -107,7 +107,7 @@ namespace LYU.WaterSystem.Data
             switch (bumpType)
             {
                 case EBumpType.Bumpmap:
-                    material.DisableKeyword("ENABLE_FLOW_MAP");
+                    material.DisableKeyword("_FlowMap_Enable");
                     if (surfaceMap != null && (bumpScale != 0 || bumpScale2 != 0))
                         material.EnableKeyword("_BumpMap_Enable");
                     else
@@ -129,9 +129,9 @@ namespace LYU.WaterSystem.Data
                 case EBumpType.Flowmap:
                     material.DisableKeyword("_BumpMap_Enable");
                     if (flowMap != null)
-                        material.EnableKeyword("ENABLE_FLOW_MAP");
+                        material.EnableKeyword("_FlowMap_Enable");
                     else
-                        material.DisableKeyword("ENABLE_FLOW_MAP");
+                        material.DisableKeyword("_FlowMap_Enable");
                     material.SetTexture(_SurfaceMap, surfaceMap);
                     material.SetVector(_SurfaceParam, new Vector4(surfaceSize, bumpScale, speed.x, speed.y));
 

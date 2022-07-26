@@ -15,14 +15,14 @@ namespace LYU.WaterSystem.Data
 
         public float sharpness = 1.2f;
         public List<Wave> _waves = new List<Wave>();
-        public bool _customWaves;
+        public bool customWaves;
         public int randomSeed = 3234;
         public BasicWaves _basicWaveSettings = new BasicWaves(1.5f, 45.0f, 5.0f);
 
-        [SerializeField] public Wave[] _waveArray;
+        [SerializeField] public Wave[] waveArray;
         [SerializeField] private ComputeBuffer _waveBuffer;
         private bool useComputeBuffer;
-        public float _maxWaveHeight;
+        public float maxWaveHeight;
 
         public bool subSurfaceEnable;
         public Color subSurfaceColor = Color.cyan;
@@ -39,15 +39,15 @@ namespace LYU.WaterSystem.Data
                 material.SetVector(WaveParam, new Vector4(0, sharpness, 0, 0));
                 material.EnableKeyword("_Wave_Enable");
 
-                if (_waveArray != null)
-                    material.SetInt(WaveCount, _waveArray.Length);
+                if (waveArray != null)
+                    material.SetInt(WaveCount, waveArray.Length);
                 useComputeBuffer = false;
                 if (useComputeBuffer)
                 {
                     material.EnableKeyword("USE_STRUCTURED_BUFFER");
                     if (_waveBuffer == null)
                         _waveBuffer = new ComputeBuffer(10, sizeof(float) * 6);
-                    _waveBuffer.SetData(_waveArray);
+                    _waveBuffer.SetData(waveArray);
                     material.SetBuffer(WaveDataBuffer, _waveBuffer);
                 }
                 else
@@ -75,20 +75,20 @@ namespace LYU.WaterSystem.Data
         {
             if (!waveEnable)
             {
-                _maxWaveHeight = 0f;
+                maxWaveHeight = 0f;
                 return;
             }
 
-            _customWaves = false;
-            SetupWaves(_customWaves);
+            customWaves = false;
+            SetupWaves(customWaves);
 
-            _maxWaveHeight = 0f;
-            foreach (Wave w in _waveArray)
+            maxWaveHeight = 0f;
+            foreach (Wave w in waveArray)
             {
-                _maxWaveHeight += w.amplitude;
+                maxWaveHeight += w.amplitude;
             }
 
-            _maxWaveHeight /= _waveArray.Length;
+            maxWaveHeight /= waveArray.Length;
 
             //CPU side
             if (!GerstnerWavesJobs.init && Application.isPlaying)
@@ -112,7 +112,7 @@ namespace LYU.WaterSystem.Data
                 float d = basicWaves.direction;
                 float l = basicWaves.wavelength;
                 int numWave = basicWaves.numWaves;
-                _waveArray = new Wave[numWave];
+                waveArray = new Wave[numWave];
                 float r = 1f / numWave;
                 for (int i = 0; i < numWave; i++)
                 {
@@ -121,7 +121,7 @@ namespace LYU.WaterSystem.Data
                     float dir = d + Random.Range(-45f, 45f);
                     float len = l * p * Random.Range(0.6f, 1.4f);
                     float speed = waveSpeed * Random.Range(1 - speedRandom, 1 + speedRandom);
-                    _waveArray[i] = new Wave(amp, dir, len, speed);
+                    waveArray[i] = new Wave(amp, dir, len, speed);
                     Random.InitState(randomSeed + i + 1);
                 }
 
@@ -129,18 +129,18 @@ namespace LYU.WaterSystem.Data
             }
             else
             {
-                _waveArray = _waves.ToArray();
+                waveArray = _waves.ToArray();
             }
         }
 
         private Vector4[] GetWaveData()
         {
-            if (_waveArray == null) return null;
+            if (waveArray == null) return null;
             Vector4[] waveData = new Vector4[MaxWaveCount];
-            for (int i = 0; i < _waveArray.Length; i++)
+            for (int i = 0; i < waveArray.Length; i++)
             {
-                waveData[i] = new Vector4(_waveArray[i].amplitude, _waveArray[i].direction, _waveArray[i].wavelength,
-                    _waveArray[i].speed);
+                waveData[i] = new Vector4(waveArray[i].amplitude, waveArray[i].direction, waveArray[i].wavelength,
+                    waveArray[i].speed);
             }
 
             return waveData;

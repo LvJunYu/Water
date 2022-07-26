@@ -5,7 +5,7 @@
         [HideInInspector] _SurfaceMap("Surface Map", 2D) = "black" {}
         [HideInInspector] _DitherPattern ("Dithering Pattern", 2D) = "grey" {}
         [HideInInspector] _FoamMap("Foam Map", 2D) = "white" {}
-        [HideInInspector] _WaterDepthMap("_WaterDepthMap", 2D) = "black" {}
+        [HideInInspector] _SeaBedHeightMap("_SeaBedHeightMap", 2D) = "black" {}
         [HideInInspector] _AbsorptionScatteringRamp("_AbsorptionScatteringRamp", 2D) = "white" {}
         [HideInInspector] _CausticMap("_CausticMap", 2D) = "black" {}
         [HideInInspector] _RippleMap("_RippleMap", 2D) = "black" {}
@@ -87,7 +87,7 @@
 			#pragma shader_feature _ _Foam_Sea _Foam_River
 			#pragma shader_feature _Caustics_Enable
 			#pragma shader_feature _ _Shadow_Enable _ShadowJitter_Enable
-			#pragma shader_feature _ _BumpMap_Enable ENABLE_FLOW_MAP
+			#pragma shader_feature _ _BumpMap_Enable _FlowMap_Enable
 			#pragma shader_feature _ _Wave_Enable
 			#pragma shader_feature _ _Ripple_Normal _Ripple_WaveEquation
 			#pragma shader_feature _CustomWave

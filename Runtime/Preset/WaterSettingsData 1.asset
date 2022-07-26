@@ -186,14 +186,14 @@ MonoBehaviour:
     speedRandom: 0
     sharpness: 2
     _waves: []
-    _customWaves: 0
+    customWaves: 0
     randomSeed: 18810
     _basicWaveSettings:
       numWaves: 10
       amplitude: 2.18
       direction: 95
       wavelength: 16.1
-    _waveArray:
+    waveArray:
     - amplitude: 1.14293
       direction: 89.52667
       wavelength: 10.915955
@@ -234,7 +234,7 @@ MonoBehaviour:
       direction: 64.14173
       wavelength: 24.406979
       speed: 1
-    _maxWaveHeight: 2.0684762
+    maxWaveHeight: 2.0684762
     subSurfaceEnable: 1
     subSurfaceColor: {r: 0, g: 0.637, b: 0.637, a: 1}
     subSurfaceSunFallOff: 4.41

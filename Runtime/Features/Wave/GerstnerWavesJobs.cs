@@ -45,7 +45,7 @@ namespace LYU.WaterSystem
         {
             if (init) return;
             //Wave data
-            var waves = water.settingsData.waveSetting._waveArray;
+            var waves = water.settingsData.waveSetting.waveArray;
             _waveCount = waves.Length;
             _peak = water.settingsData.waveSetting.sharpness;
             _speed = 1; // 速度单独存到Wave数据里

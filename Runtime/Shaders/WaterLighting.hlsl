@@ -30,7 +30,7 @@ float2 AdjustedDepth(float2 uvs, float3 viewDir, float3 posVS)
 float WaterTextureDepth(float3 posWS)
 {
     half2 depthUv = (posWS.xz - _WaterCenterPos.xz) * _DepthTexTiling * 0.5 + 0.5;
-    return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_ScreenTextures_linear_clamp, depthUv, 1).r);
+    return (1 - SAMPLE_TEXTURE2D_LOD(_SeaBedHeightMap, sampler_ScreenTextures_linear_clamp, depthUv, 1).r);
 }
 
 float3 WaterDepth(float3 posWS, float rawD, float3 viewDir, float3 posVS)
@@ -75,10 +75,6 @@ half3 SubSurfaceLighting(float3 viewDir, float3 lightDir, float sssIndensity, fl
     half subsurface = (_SubSurfaceBase + _SubSurfaceSun * towardsSun) * (1.0 - v) * sssIndensity * shadow;
     return subsurface * _SubSurfaceColor.rgb * lightColor;
 }
-
-#ifdef _REFLECTION_TD_SSPR
-    #include "Packages/water/Runtime/Features/TD_SSPR/TD_SSPR_EXTEND.hlsl" 
-#endif
 
 half3 SampleReflections(half3 positionWS, half3 normalWS, half3 viewDirectionWS, half2 screenUV, half roughness,
                         float depth)
@@ -153,7 +149,7 @@ BRDFData InitializeWaterBRDFData(half foamLerp)
     half3 specular = 1;
     half smoothness = 0.9;
     half alpha = 1;
-    #ifdef ENABLE_FLOW_MAP
+    #ifdef _FlowMap_Enable
         albedo = lerp(albedo, _FoamColor2.xyz, foamLerp);
         metallic = lerp(metallic, _FoamMetallic, foamLerp);
         specular = lerp(specular, _FoamSpecular.xxx, foamLerp);

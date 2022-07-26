@@ -94,7 +94,7 @@ namespace LYU.WaterSystem
 
             waterMaterial.SetVector(WaterParam1, transform.position);
             waterMaterial.SetVector(WaterParam2, new Vector4(settingsData.surfaceSetting.waterMaxVisibility,
-                settingsData.waveSetting._maxWaveHeight, deltaHeight, orthographicSize));
+                settingsData.waveSetting.maxWaveHeight, deltaHeight, orthographicSize));
         }
 
         public void Refresh()

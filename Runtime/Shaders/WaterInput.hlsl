@@ -138,7 +138,7 @@ TEXTURE2D(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
 TEXTURE2D(_CameraOpaqueTexture);
-TEXTURE2D(_WaterDepthMap);
+TEXTURE2D(_SeaBedHeightMap);
 TEXTURE2D(_AbsorptionScatteringRamp);
 TEXTURE2D(_SurfaceMap);
 TEXTURE2D(_FoamMap);

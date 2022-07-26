@@ -22,6 +22,7 @@ half SeaFoam(float2 foamUv, float depth, float height, float waveHeight, float n
     half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_ScreenTextures_linear_repeat, foamUv).rgb;
     //r=thick, g=medium, b=light
     half shoreMask = pow(saturate((1 - height + 9) * 0.1), 6); //水垂直深度浅的地方有泡沫
+    // return shoreMask;
     half foamMask = waveHeight; //海浪normolize高度，模拟浪尖泡沫
     // 根据视角深度对泡沫的影响，并用sin使泡沫往岸边滚动
     half shoreWave = (sin(_Time.z + (height * 10) + noise) * 0.5 + 0.5) * saturate((1 - depth) + 1);

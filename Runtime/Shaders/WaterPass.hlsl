@@ -3,11 +3,9 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "WaterInput.hlsl"
-#include "CommonUtilities.hlsl"
 #include "WaterLighting.hlsl"
 
 #if _Foam_Sea | _Foam_River
-    #define _Foam_Enable 1
     #include "Packages/water/Runtime/Features/Foam/WaterFoam.hlsl"
 #endif
 
@@ -23,8 +21,12 @@
     #include "Packages/water/Runtime/Features/Ripple/WaterRipple.hlsl"
 #endif
 
-#ifdef ENABLE_FLOW_MAP
+#ifdef _FlowMap_Enable
     #include "Packages/water/Runtime/Features/FlowMap/FlowMap.hlsl" 
+#endif
+
+#ifdef _REFLECTION_TD_SSPR
+    #include "Packages/water/Runtime/Features/TD_SSPR/TD_SSPR_EXTEND.hlsl" 
 #endif
 
 struct WaterVertexInput
@@ -51,6 +53,8 @@ struct WaterVertexOutput
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
+#include "WaterCommon.hlsl"
+
 void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
 {
     output.uv2.xy = v.texcoord;
@@ -62,7 +66,7 @@ void WaveVertexOperations(WaterVertexInput v, inout WaterVertexOutput output)
     output.viewDirNoise.w = ((noise((worldPos.xz * 0.5) + time) + noise((worldPos.xz) + time)) * 0.25 - 0.5) + 1;
     #endif
 
-    #ifdef ENABLE_FLOW_MAP
+    #ifdef _FlowMap_Enable
     {
         output.uv.zw = worldPos.xz * 0.1 * _FlowNormalSize;
         output.uv.xy = worldPos.xz * 0.1 * _SurfaceSize;
@@ -129,32 +133,26 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(IN);
     float3 worldPos = IN.posWSFog.xyz;
+
+    // ripple
     #if _Ripple_Normal
-    IN.normal = RippleNormal(IN.posWSFog.xyz, IN.normal);
+        IN.normal = RippleNormal(IN.posWSFog.xyz, IN.normal);
     #elif _Ripple_WaveEquation
-	float2 rippleUv = (IN.posWSFog.xz - _RippleCenter) / _RippleSize * 0.5 + 0.5;
-	float3 rippleNormal = SAMPLE_TEXTURE2D(_RippleNormalTex, sampler_ScreenTextures_linear_clamp, rippleUv).rgb * 2 - 1;
-	IN.normal = normalize(rippleNormal);
+	    float2 rippleUv = (IN.posWSFog.xz - _RippleCenter) / _RippleSize * 0.5 + 0.5;
+	    float3 rippleNormal = SAMPLE_TEXTURE2D(_RippleNormalTex, sampler_ScreenTextures_linear_clamp, rippleUv).rgb * 2 - 1;
+	    IN.normal = normalize(rippleNormal);
     #endif
 
-    // Depth
+    // depth
     half3 screenUV = IN.screenPos.xyz / IN.screenPos.w; //screen UVs
     float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV.xy);
     float3 depth = WaterDepth(worldPos, rawD, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
     // TODO - hardcoded shore depth UVs
 
-    #if WEATHER_EFFECT
-	    half f_occlusion = 0;
-        half3 f_diffuseColor = half3(0,0,0);
-        half3 f_specularColor = half3(0,0,0);
-        half f_smoothness = 0;
-        APPLY_RIPPLE(IN, IN.posWSFog.xyz, f_occlusion, IN.normal, f_diffuseColor, f_specularColor, f_smoothness)
-    #endif
-
-    // Shadow
+    // shadow
     half shadow = 1;
     #if _Shadow_Enable | _ShadowJitter_Enable
-    float3 shadowPos = IN.posWSFog.xyz;
+        float3 shadowPos = IN.posWSFog.xyz;
     #if _ShadowJitter_Enable
     	half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
         jitterUV += frac(_Time.zw * _BumpSpeed);
@@ -162,81 +160,59 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
         jitterTexture.z = 0;
     	shadowPos += jitterTexture.xzy * _ShadowJitter;
     #endif
-    shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(shadowPos));
-    shadow = LerpWhiteTo(shadow, _ShadowIntensity);
+        shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(shadowPos));
+        shadow = LerpWhiteTo(shadow, _ShadowIntensity);
     #endif
 
-    // Light    
+    // light    
     Light mainLight = GetMainLight();
     half3 GI = SampleSH(IN.normal);
-
-    // lightColor
     half3 lightColor = 1 * (shadow * mainLight.color + GI);
 
-    float3 detailBump = 0;
+    // detail normal
+    half3 detailBump = half3(0, 0, 1);
     half foamLerp = 0;
-    // Detail waves
-    #if _BumpMap_Enable | ENABLE_FLOW_MAP
-    #ifdef ENABLE_FLOW_MAP
+    #if _BumpMap_Enable | _FlowMap_Enable
+    {
+    #ifdef _FlowMap_Enable
         foamLerp = SampleFlowMap(IN.uv, IN.uv2, detailBump, IN.normal);
     #else
-
-    float3 detailBump1, detailBump2;
-    detailBump1.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv.zw).xy * 2 - 1;
-    detailBump2.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv.xy).xy * 2 - 1;
-    #ifdef _TRIPLE_NORMAL
-    float3 detailBump3;
-    detailBump3.xy = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_ScreenTextures_linear_repeat, IN.uv2.zw).xy * 2 - 1;
+        detailBump = GetDetailNormal(depth.x, IN);
+        IN.normal = blend_rnm(IN.normal.xzy, detailBump).xzy;
     #endif
-    float detailScale = saturate(depth.x * 0.25);
-    detailBump1.xy *= detailScale * _BumpScale;
-    detailBump2.xy *= detailScale * _BumpScale2;
-    #ifdef _TRIPLE_NORMAL
-    detailBump3.xy *= detailScale * _BumpScale3;
-    detailBump3.z = sqrt(1.0 - saturate(dot(detailBump3.xy, detailBump3.xy)));
-    #endif
-    detailBump1.z = sqrt(1.0 - saturate(dot(detailBump1.xy, detailBump1.xy)));
-    detailBump2.z = sqrt(1.0 - saturate(dot(detailBump2.xy, detailBump2.xy)));
-    
-    #ifdef _TRIPLE_NORMAL
-    detailBump = blend_whiteout(detailBump1, detailBump2, detailBump3);
-    #else
-    detailBump = blend_whiteout(detailBump1, detailBump2);
+        IN.normal = normalize(IN.normal);
+    }
     #endif
 
-    IN.normal = blend_rnm(IN.normal.xzy, detailBump).xzy;
-    // detailBump.xy = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25 + 0.25);
-    // IN.normal += half3(detailBump.x, 0, detailBump.y) * _BumpScale;
-    #endif
-    IN.normal = normalize(IN.normal);
-    #endif
-
-    // Distortion 根据视线深度扰动uv，影响折射，模拟水流对水下物体的扰动效果
-    half2 distortion = DistortionUVs(depth.x, IN.normal) * _Distortion;
-    distortion = screenUV.xy + distortion; // * clamp(depth.x, 0, 5);
+    // distortion
+    half2 distortionUV = screenUV.xy + DistortionUVs(depth.x, IN.normal) * _Distortion; // * clamp(depth.x, 0, 5);
     float d = depth.x;
-    depth.xz = AdjustedDepth(distortion, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
-    distortion = depth.x < 0 ? screenUV.xy : distortion;
+    depth.xz = AdjustedDepth(distortionUV, IN.viewDirNoise.xyz, IN.posVSwaveHeight.xyz);
+    distortionUV = depth.x < 0 ? screenUV.xy : distortionUV;
     depth.x = depth.x < 0 ? d : depth.x;
 
-    float2 foamUv = IN.uv.zw + detailBump.xy * 0.0025;
+    // foam
+    half3 foam = 0;
+    #if _Foam_Sea | _Foam_River
+    {
+        float2 foamUv = IN.uv.zw * _FoamFactor1 + detailBump.xy * 0.0025;
     #if _Foam_Sea
         half foamMask = SeaFoam(foamUv, depth.x, depth.y, IN.posVSwaveHeight.w, IN.viewDirNoise.w);
     #elif _Foam_River
         half foamMask = RiverFoam(foamUv, depth.x);
     #endif
-
-    half3 foam = 0;
-    #if _Foam_Enable
+        return half4(foamMask.xxx,1);
         foam = (foamMask * _FoamIntensity) * _FoamColor * (shadow * mainLight.color + GI);
+    }
     #endif
 
+    // specular
     float3 viewDir = SafeNormalize(IN.viewDirNoise.xyz);
-
     BRDFData brdfData = InitializeWaterBRDFData(foamLerp);
     half3 spec = DirectSpecular(brdfData, IN.normal, mainLight.direction, viewDir, _HModifier) * (_SpecularIntensity *
         shadow) * mainLight.color;
 
+    // additional lights
     #ifdef _ADDITIONAL_LIGHTS
         uint pixelLightCount = GetAdditionalLightsCount();
         for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
@@ -247,27 +223,26 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
         }
     #endif
 
+    // reflection
     half3 reflection = SampleReflections(IN.posWSFog.xyz, IN.normal, IN.viewDirNoise.xyz, screenUV.xy, 0.0,
                                          IN.clipPos.z);
     half fresnelTerm = CalculateFresnelTerm(IN.normal, viewDir);
     reflection *= _ReflectIntensity * fresnelTerm;
-
     spec = clamp(reflection + spec, 0, _SpecularClamp);
 
-    // Refraction
-    half3 refraction = Refraction(distortion, depth.x);
+    // refraction
+    half3 refraction = Refraction(distortionUV, depth.x);
     #if _Caustics_Enable
     refraction *= Caustics(screenUV.xy, rawD);
     #endif
 
+    // diffuse
     half depthMulti = 1 / _MaxDepth;
     half3 diffuse;
     #ifdef _SIMPLE_SCATTER
     {
-        half4 color = lerp(_ShallowColor, _DeepColor, saturate(depth.x * depthMulti));
-        diffuse = lerp(refraction, color.rgb, color.a) * lightColor;
-        // half3 shoalColor = lerp(refraction, refraction * _ShallowColor.rgb, saturate(depth.x * depthMulti));
-        // diffuse = lerp(_DeepColor.rgb, shoalColor, saturate(exp2(-depth.x * depthMulti)));
+        half4 scatterColor = lerp(_ShallowColor, _DeepColor, saturate(depth.x * depthMulti));
+        diffuse = lerp(refraction, scatterColor.rgb, scatterColor.a) * lightColor;
     }
     #else
     {
@@ -276,7 +251,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
         diffuse = refraction + scattering;
     }
     #endif
-    
+
+    // sss
     half subsurfaceInstance = max(0, IN.posVSwaveHeight.w + _SubSurfaceScale);
     diffuse += SubSurfaceLighting(viewDir, mainLight.direction, subsurfaceInstance, shadow, mainLight.color);
 
@@ -284,12 +260,9 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
         diffuse += lerp(_AdditionColor1, _AdditionColor2, saturate(fresnelTerm * _AdditionRange));
     #endif
 
-    #if _Foam_Sea | _Foam_River
-        //diffuse *= 1 - saturate(foam);
-	    diffuse += foam; //lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
-    #endif
+    diffuse *= 1 - saturate(foam);
 
-    half3 color = diffuse + spec;
+    half3 color = diffuse + spec + foam;
 
     //边缘过度
     color = lerp(refraction, color, 1 - saturate(1 - depth.x * _EdgeRange));

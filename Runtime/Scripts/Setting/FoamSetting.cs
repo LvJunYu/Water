@@ -43,7 +43,7 @@ namespace LYU.WaterSystem.Data
             switch (foamType)
             {
                 case EFoamType.SeaFoam:
-                    material.SetTexture(WaterDepthMap, bakedDepthTex);
+                    material.SetTexture(_SeaBedHeightMap, bakedDepthTex);
                     material.SetVector(_FoamParam2, new Vector4(foamParam1, foamParam2));
                     break;
                 case EFoamType.RiverFoam:
@@ -84,7 +84,7 @@ namespace LYU.WaterSystem.Data
         private static readonly int _FoamParam3 = Shader.PropertyToID("_FoamParam3");
         private static readonly int _FoamColor = Shader.PropertyToID("_FoamColor");
         private static readonly int _FoamMap = Shader.PropertyToID("_FoamMap");
-        private static readonly int WaterDepthMap = Shader.PropertyToID("_WaterDepthMap");
+        private static readonly int _SeaBedHeightMap = Shader.PropertyToID("_SeaBedHeightMap");
     }
 
     public enum EFoamType
