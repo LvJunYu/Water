@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: WaterSettingsData 5
   m_EditorClassIdentifier: 
   surfaceSetting:
-    fold: 1
+    fold: 0
     bumpType: 0
     scartterType: 0
-    surfaceMap: {fileID: 2800000, guid: a7f2820670809ba4a9fb58e1db8f3994, type: 3}
+    surfaceMap: {fileID: 2800000, guid: 4cf661ad56698194eb78b511eed27ef2, type: 3}
     flowMap: {fileID: 0}
     flowNormal: {fileID: 0}
     flowMapScale: 0
@@ -28,14 +28,14 @@ MonoBehaviour:
     foamSmoothness: 0
     foamColor: {r: 0, g: 0, b: 0, a: 0}
     foamIntensity: 0
-    bumpScale: 0.27
-    surfaceSize: 0.414
+    bumpScale: 0.44
+    surfaceSize: 0.158
     speed: {x: 2, y: 0}
-    bumpScale2: 0.27
-    surfaceSize2: 0.287
+    bumpScale2: 0.3
+    surfaceSize2: 0.179
     speed2: {x: -0.5, y: 0}
     bumpScale3: 0.35
-    surfaceSize3: 0.1
+    surfaceSize3: 0.44
     speed3: {x: -0.2, y: -1}
     distort: 0.8
     dispersion: 1
@@ -102,7 +102,7 @@ MonoBehaviour:
       m_Mode: 0
       m_NumColorKeys: 4
       m_NumAlphaKeys: 2
-    tripleNormalMap: 0
+    tripleNormalMap: 1
     shallowColor: {r: 0.1518927, g: 0.26073834, b: 0.3773585, a: 0.7921569}
     deepColor: {r: 0.0953186, g: 0.15952072, b: 0.254717, a: 1}
     additionColor: 0
@@ -111,11 +111,11 @@ MonoBehaviour:
     additionColor2: {r: 0, g: 0, b: 0, a: 1}
     _rampTexture: {fileID: 0}
   reflectionSetting:
-    fold: 1
+    fold: 0
     reflectionEnable: 1
     refType: 2
     planarSettings:
-      m_ResolutionMultiplier: 2
+      m_ResolutionMultiplier: 1
       m_ClipPlaneOffset: 0.301
       m_ReflectLayers:
         serializedVersion: 2
@@ -135,7 +135,7 @@ MonoBehaviour:
     shadowIntensity: 1
     shadowJitter: 0
   foamSetting:
-    fold: 1
+    fold: 0
     foamEnable: 1
     foamType: 0
     foamMap: {fileID: 2800000, guid: ca439406e806ecf44a9586510be9477d, type: 3}
@@ -160,18 +160,18 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
     defaultFoamRamp: {fileID: 2800000, guid: 4098762bce32f44b9b7c56531d1a988e, type: 3}
     bakedDepthTex: {fileID: 2800000, guid: 2bc8877f55e2a6e4b9a578a292f8169f, type: 3}
   waveSetting:
-    fold: 1
+    fold: 0
     waveEnable: 1
     waveSpeed: 2
     speedRandom: 0.165
@@ -191,76 +191,76 @@ MonoBehaviour:
     randomSeed: 18810
     _basicWaveSettings:
       numWaves: 14
-      amplitude: 3.18
+      amplitude: 3.15
       direction: -90
-      wavelength: 18.8
+      wavelength: 55.7
     waveArray:
-    - amplitude: 1.6672099
+    - amplitude: 1.6514815
       direction: -95.47333
-      wavelength: 12.746579
+      wavelength: 37.765133
       speed: 2.270082
-    - amplitude: 1.5955648
+    - amplitude: 1.5805124
       direction: -93.4005
-      wavelength: 7.5263743
+      wavelength: 22.298887
       speed: 1.9492879
-    - amplitude: 2.1845777
+    - amplitude: 2.1639686
       direction: -119.68519
-      wavelength: 12.04961
+      wavelength: 35.700176
       speed: 1.6921016
-    - amplitude: 2.151448
+    - amplitude: 2.1311514
       direction: -75.46333
-      wavelength: 18.531069
+      wavelength: 54.903225
       speed: 2.0117621
-    - amplitude: 2.937585
+    - amplitude: 2.909872
       direction: -98.106285
-      wavelength: 13.606109
+      wavelength: 40.311718
       speed: 1.8919121
-    - amplitude: 2.6343744
+    - amplitude: 2.6095219
       direction: -131.45605
-      wavelength: 18.52474
+      wavelength: 54.884476
       speed: 2.0912123
-    - amplitude: 2.4514852
+    - amplitude: 2.4283578
       direction: -91.5018
-      wavelength: 14.454456
+      wavelength: 42.825172
       speed: 2.1418092
-    - amplitude: 3.4639587
+    - amplitude: 3.43128
       direction: -109.64917
-      wavelength: 12.106947
+      wavelength: 35.870052
       speed: 1.7120048
-    - amplitude: 2.9329667
+    - amplitude: 2.9052973
       direction: -125.05165
-      wavelength: 20.656649
+      wavelength: 61.200817
       speed: 1.813414
-    - amplitude: 4.068947
+    - amplitude: 4.0305605
       direction: -120.85827
-      wavelength: 23.265366
+      wavelength: 68.92983
       speed: 1.8097172
-    - amplitude: 3.8261855
+    - amplitude: 3.7900894
       direction: -71.62415
-      wavelength: 28.345594
+      wavelength: 83.98137
       speed: 2.3197699
-    - amplitude: 4.7039547
+    - amplitude: 4.659578
       direction: -114.83179
-      wavelength: 16.113821
+      wavelength: 47.741486
       speed: 1.694878
-    - amplitude: 4.407616
+    - amplitude: 4.3660345
       direction: -106.78517
-      wavelength: 32.08963
+      wavelength: 95.074066
       speed: 2.2764587
-    - amplitude: 4.058929
+    - amplitude: 4.020637
       direction: -120.458405
-      wavelength: 21.057251
+      wavelength: 62.38771
       speed: 1.7301713
-    maxWaveHeight: 3.0774858
-    subSurfaceEnable: 1
-    subSurfaceColor: {r: 0.1372549, g: 0.36274514, b: 0.6784314, a: 1}
+    maxWaveHeight: 3.0484529
+    subSurfaceEnable: 0
+    subSurfaceColor: {r: 0.2642748, g: 0.1372549, b: 0.6784314, a: 1}
     subSurfaceSunFallOff: 4.41
     subSurfaceBase: 0.135
     subSurfaceSun: 1.01
     subSurfaceScale: 0.597
     testUv: 1
   causticsSetting:
-    fold: 1
+    fold: 0
     causticsEnable: 1
     causticsTexture: {fileID: 2800000, guid: a7f2820670809ba4a9fb58e1db8f3994, type: 3}
     causticsIntensity: 0.51
@@ -271,10 +271,10 @@ MonoBehaviour:
     causticsSpeed: {x: -1, y: -1}
   rippleSetting:
     fold: 1
-    rippleType: 0
+    rippleType: 1
     waveShape: 4
-    rippleEnable: 0
-    intensity: 0.5
+    rippleEnable: 1
+    intensity: 1
     speed: 1
     frequency: 1
     lifeTime: 3
@@ -286,7 +286,7 @@ MonoBehaviour:
     param6: 1
     param7: 1
     param8: 1
-    maxRippleCount: 3
+    maxRippleCount: 4
     noiseMap: {fileID: 0}
     waveform:
       serializedVersion: 2
@@ -399,8 +399,8 @@ MonoBehaviour:
       type: 3}
     rippleHeightShader: {fileID: 4800000, guid: 83c8963df1423704899ac76a88b75a61,
       type: 3}
-    center: {x: 0, y: 0}
+    center: {x: 277, y: 160}
     rippleRange: 50
     precision: 10
-    viscosity: 0.15
-    velocity: 1
+    viscosity: 0.5
+    velocity: 0.5

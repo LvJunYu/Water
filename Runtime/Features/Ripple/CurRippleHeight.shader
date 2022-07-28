@@ -34,8 +34,8 @@ Shader "Hidden/Water/CurRippleHeight"
             uint _RippleCount;
             float4 _RippleRange;
             float4 _RippleParam;
-            #define _Center _RippleRange.xy;
-            #define _Size _RippleRange.zw;
+            #define _Center _RippleRange.xy
+            #define _Size _RippleRange.zw
             #define _RippleIntensity _RippleParam.x
             #define _WaterLevel _RippleParam.y;
 

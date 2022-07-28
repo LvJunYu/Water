@@ -41,9 +41,9 @@ half3 Caustics(float3 worldPos)
     half mip = abs(worldPos.y - _WaterLevel - _CausticsOffset) * 5 / _CausticsBlendDistance;
     #if _Caustics_Dispersion_Enable
         half3 caustics;
-        caustics.r = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV, 0).b;
-        caustics.g = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV + _CausticMap_TexelSize.xy * _CausticsDispersion, 0).b;
-        caustics.b = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV + _CausticMap_TexelSize.xy * _CausticsDispersion * 2, 0).b;
+        caustics.r = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV, mip).b;
+        caustics.g = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV + _CausticMap_TexelSize.xy * _CausticsDispersion, mip).b;
+        caustics.b = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV + _CausticMap_TexelSize.xy * _CausticsDispersion * 2, mip).b;
     #else 
         float3 caustics = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_ScreenTextures_trilinear_repeat, causticUV, mip).b;
     #endif
