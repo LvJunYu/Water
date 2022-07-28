@@ -22,6 +22,7 @@ namespace LYU.WaterSystem.Data
             var speed2 = property.FindPropertyRelative("speed2");
 
             var distort = property.FindPropertyRelative("distort");
+            var dispersion = property.FindPropertyRelative("dispersion");
             var edge = property.FindPropertyRelative("edge");
             var specularClamp = property.FindPropertyRelative("specularClamp");
             var specularIntensity = property.FindPropertyRelative("specularIntensity");
@@ -84,7 +85,8 @@ namespace LYU.WaterSystem.Data
                     break;
             }
 
-            EditorGUILayout.Slider(distort, 0f, 2f, "Refract Distortion");
+            EditorGUILayout.Slider(distort, 0f, 5f, "Refract Distortion");
+            EditorGUILayout.Slider(dispersion, 0f, 5f, "Refract Dispersion");
             EditorGUILayout.Slider(edge, 0.01f, 2f, "Shore Transition");
             EditorGUILayout.Slider(specularIntensity, 0, 2, "Specular Intensity");
             EditorGUILayout.Slider(specularClamp, 0, 1024, "Specular Clamp");

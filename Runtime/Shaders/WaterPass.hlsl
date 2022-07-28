@@ -13,7 +13,7 @@
     #include "Packages/water/Runtime/Features/Wave/GerstnerWaves.hlsl"
 #endif
 
-#if _Caustics_Enable
+#if _Caustics_Enable | _Caustics_Dispersion_Enable
 #include "Packages/water/Runtime/Features/Caustics/WaterCaustics.hlsl"
 #endif
 
@@ -230,8 +230,9 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
     // refraction
     half3 refraction = Refraction(distortionUV, depth.x);
-    #if _Caustics_Enable
-    refraction *= Caustics(screenUV.xy, rawD);
+    #if _Caustics_Enable | _Caustics_Dispersion_Enable
+    // return half4(Caustics(screenUV.xy, rawD),1);
+    refraction *= Caustics(distortionUV, rawD);
     #endif
 
     // diffuse

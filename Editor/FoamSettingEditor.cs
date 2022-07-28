@@ -35,12 +35,12 @@ namespace LYU.WaterSystem.Data
                     var basicFoam = property.FindPropertyRelative("basicFoam");
                     EditorGUILayout.Slider(shallowsHeight, 0, 1, "Shore Range Expansion");
                     EditorGUILayout.PropertyField(foamMap, foamMapStr);
-                    EditorGUILayout.Slider(foamParam1, 0, 10, "Foam Map Tiling");
+                    EditorGUILayout.Slider(foamParam1, 0, 2f, "Foam Map Tiling");
                     EditorGUILayout.Slider(foamParam2, 0, 2f, "Shore Wave Tiling");
                     EditorGUILayout.Slider(foamParam3, 0, 2f, "Shore Wave Speed");
                     EditorGUILayout.Slider(foamParam4, 0, 2f, "Shore Wave Gradient");
-                    EditorGUILayout.Slider(foamParam5, 0, 2f, "Foam Param 5");
-                    EditorGUILayout.Slider(foamParam6, 0, 2f, "Foam Param 6");
+                    EditorGUILayout.Slider(foamParam5, 0, 2f, "Shore Wave Intensity");
+                    EditorGUILayout.Slider(foamParam6, 0, 10f, "Shore Wave Power");
                     EditorGUILayout.PropertyField(bakedDepthTex, bakedDepthTexStr);
                     if (!bakedDepthTex.objectReferenceValue)
                         EditorGUILayout.HelpBox("点击Water脚本右上角【获取高度图】进行Bake\nBake前需要把海底物体的Layer设置成SeaFloor",

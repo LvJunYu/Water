@@ -26,7 +26,8 @@ half SeaFoam(float2 foamUv, float depth, float height, float waveHeight, float n
     half foamMask = waveHeight; //海浪normolize高度，模拟浪尖泡沫
     // 根据视角深度对泡沫的影响，并用sin使泡沫往岸边滚动
     half shoreWave = (sin(_Time.z * _FoamFactor3 + (height * 10 * _FoamFactor2) + noise) * 0.5 + 0.5) * saturate((1 - depth) * _FoamFactor4 + 1);
-
+    shoreWave = pow(shoreWave, _FoamFactor6) * _FoamFactor5;
+    
     foamMask = max(max((foamMask + shoreMask) - noise * 0.25, 0), shoreWave); // 取上门两个最大值
     // return max((foamMask + shoreMask) - noise * 0.25, 0);
     half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_ScreenTextures_linear_clamp,

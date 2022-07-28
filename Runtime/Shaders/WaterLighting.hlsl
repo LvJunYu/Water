@@ -46,8 +46,17 @@ float2 WaterViewDepthAndVerticalDepth(float3 posWS, float rawD, float3 viewDir, 
 
 half3 Refraction(half2 distortion, float depth)
 {
-    half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_ScreenTextures_linear_clamp, distortion,
-                                        depth * 0.25).rgb;
+    half mip = depth * 0.25;
+    #if defined(_Refraction_Dispersion_Enable)
+        half3 refrac;
+        half dispersion = _RefractionDispersion * saturate(depth);
+        refrac.r = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_ScreenTextures_trilinear_clamp, distortion - _CameraOpaqueTexture_TexelSize.xy * _RefractionDispersion, mip).r;
+        refrac.g = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_ScreenTextures_trilinear_clamp, distortion, mip).g;
+        refrac.b = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_ScreenTextures_trilinear_clamp, distortion + _CameraOpaqueTexture_TexelSize.xy * _RefractionDispersion, mip).b;
+    #else 
+        half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_ScreenTextures_trilinear_clamp, distortion, mip).rgb;
+    #endif
+
     return refrac;
 }
 
@@ -90,7 +99,7 @@ half3 SampleReflections(half3 positionWS, half3 normalWS, half3 viewDirectionWS,
     reflection = GlossyEnvironmentReflection(reflectVector, 0, 1);
     #elif _REFLECTION_PLANARREFLECTION
     half2 reflectionUV = screenUV + normalWS.zx * half2(0.1, 0.3) * _RelectDistort;
-    reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection
+    reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_trilinear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection
     #elif _REFLECTION_SSPR
     half2 reflectionUV = screenUV + normalWS.zx * half2(0.1, 0.3) * _RelectDistort;
     half4 sample = SAMPLE_TEXTURE2D(_SSPlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV);//planar reflection

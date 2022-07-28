@@ -15,8 +15,9 @@
         [HideInInspector] _WaterParam2("WaterParam2", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _SurfaceParam("SurfaceParam", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _SurfaceParam2("_SurfaceParam2", Vector) = (0.0, 0.0, 0.0, 0.0)
-        [HideInInspector] _SubsurfaceParam("_SubsurfaceParam", Vector) = (0.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _SurfaceParam3("_SurfaceParam3", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _SurfaceParam4("_SurfaceParam4", Vector) = (0.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _SubsurfaceParam("_SubsurfaceParam", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _SubSurfaceColor("_SubSurfaceColor", Color) = (0,1,1,1)
         [HideInInspector] _ReflectionParam("ReflectionParam", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _ShadowParam("ShadowParam", Vector) = (0.0, 0.0, 0.0, 0.0)
@@ -25,6 +26,7 @@
         [HideInInspector] _FoamParam3("FoamParam3", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _FoamColor("FoamColor", Color) = (1,1,1,1)
         [HideInInspector] _CausticsParam1("CausticsParam1", Vector) = (0.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CausticsParam2("CausticsParam2", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _RippleParam("RippleParam", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _RippleParam2("RippleParam2", Vector) = (0.0, 0.0, 0.0, 0.0)
         [HideInInspector] _RippleParam3("RippleParam3", Vector) = (0.0, 0.0, 0.0, 0.0)
@@ -85,12 +87,13 @@
 			// #pragma shader_feature _ USE_STRUCTURED_BUFFER
 			#pragma shader_feature _ _REFLECTION_CUBEMAP _REFLECTION_PROBES _REFLECTION_PLANARREFLECTION _REFLECTION_SSPR _REFLECTION_TD_SSPR
 			#pragma shader_feature _ _Foam_Sea _Foam_River
-			#pragma shader_feature _Caustics_Enable
+			#pragma shader_feature _ _Refraction_Dispersion_Enable
+			#pragma shader_feature _ _Caustics_Enable _Caustics_Dispersion_Enable
 			#pragma shader_feature _ _Shadow_Enable _ShadowJitter_Enable
 			#pragma shader_feature _ _BumpMap_Enable _FlowMap_Enable
 			#pragma shader_feature _ _Wave_Enable
 			#pragma shader_feature _ _Ripple_Normal _Ripple_WaveEquation
-			#pragma shader_feature _CustomWave
+			#pragma shader_feature _ _CustomWave
       
             #pragma shader_feature _ _TRIPLE_NORMAL
             #pragma shader_feature _ _SIMPLE_SCATTER

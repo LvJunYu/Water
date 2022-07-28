@@ -4,14 +4,18 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
+
 float4 _DitherPattern_TexelSize;
+float4 _CausticMap_TexelSize;
+
 float4 _WaterParam1;
 half4 _WaterParam2;
 half4 _SurfaceParam;
 half4 _SurfaceParam2;
-half4 _SubsurfaceParam;
+half4 _SurfaceParam3;
 half4 _SurfaceParam4;
 half4 _SurfaceParam5;
+half4 _SubsurfaceParam;
 half4 _ReflectionParam;
 half4 _ShadowParam;
 half4 _FoamParam;
@@ -19,6 +23,7 @@ half4 _FoamParam2;
 half4 _FoamParam3;
 half4 _FoamColor;
 half4 _CausticsParam1;
+half4 _CausticsParam2;
 
 half4 _RippleParam;
 half4 _RippleParam2;
@@ -42,7 +47,7 @@ half _FoamIntensity2;
 half4 _FoamColor2;
 half4 _ShallowColor;
 half4 _DeepColor;
-half _HModifier;
+
 half _AdditionRange;
 half4 _AdditionColor1;
 half4 _AdditionColor2;
@@ -65,6 +70,9 @@ CBUFFER_END
 #define _MaxWaveHeight _WaterParam2.y
 #define _HeighMapCameraAboveWaterHeight _WaterParam2.z
 #define _HeighMapSizeInverse 1.0 / _WaterParam2.w
+
+#define _HModifier _SurfaceParam3.x
+#define _RefractionDispersion _SurfaceParam3.y
 
 #define _SurfaceSize _SurfaceParam.x
 #define _BumpScale _SurfaceParam.y
@@ -105,6 +113,8 @@ CBUFFER_END
 #define _CausticsSize _CausticsParam1.y
 #define _CausticsOffset _CausticsParam1.z
 #define _CausticsBlendDistance _CausticsParam1.w
+#define _CausticsSpeed _CausticsParam2.xy
+#define _CausticsDispersion _CausticsParam2.z
 
 #define _RippleSpeed _RippleParam.x
 #define _RippleFrequency _RippleParam.y
@@ -125,6 +135,8 @@ CBUFFER_END
 
 SAMPLER(sampler_ScreenTextures_linear_clamp);
 SAMPLER(sampler_ScreenTextures_linear_repeat);
+SAMPLER(sampler_ScreenTextures_trilinear_clamp);
+SAMPLER(sampler_ScreenTextures_trilinear_repeat);
 
 #if defined(_REFLECTION_PLANARREFLECTION)
 TEXTURE2D(_PlanarReflectionTexture);
@@ -138,6 +150,7 @@ TEXTURE2D(_SSPlanarReflectionTexture);
 TEXTURE2D_FLOAT(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
+float4 _CameraOpaqueTexture_TexelSize;
 TEXTURE2D(_CameraOpaqueTexture);
 TEXTURE2D(_SeaBedHeightMap);
 TEXTURE2D(_AbsorptionScatteringRamp);

@@ -16,12 +16,16 @@ namespace LYU.WaterSystem.Data
             var causticsSize = property.FindPropertyRelative("causticsSize");
             var causticsOffset = property.FindPropertyRelative("causticsOffset");
             var causticsBlendDistance = property.FindPropertyRelative("causticsBlendDistance");
-            causticsEnable.boolValue = EditorGUILayout.Toggle("焦散开关", causticsEnable.boolValue);
-            EditorGUILayout.PropertyField(causticsTexture, new GUIContent("焦散贴图(BA)"));
-            EditorGUILayout.Slider(causticsIntensity, 0, 2, "强度");
-            EditorGUILayout.Slider(causticsSize, 0, 2, "大小");
-            EditorGUILayout.Slider(causticsOffset, -5, 5, "起始位置偏移");
-            EditorGUILayout.Slider(causticsBlendDistance, 0, 10, "混合距离");
+            var causticsDispersion = property.FindPropertyRelative("causticsDispersion");
+            var causticsSpeed = property.FindPropertyRelative("causticsSpeed");
+            causticsEnable.boolValue = EditorGUILayout.Toggle("Caustics Enable", causticsEnable.boolValue);
+            EditorGUILayout.PropertyField(causticsTexture, new GUIContent("Caustics Map(BA)"));
+            EditorGUILayout.Slider(causticsIntensity, 0, 2, "Caustics Intensity");
+            EditorGUILayout.Slider(causticsSize, 0, 2, "Caustics Size");
+            EditorGUILayout.Slider(causticsOffset, -5, 5, "Caustics Offset");
+            EditorGUILayout.Slider(causticsBlendDistance, 0, 10, "Caustics Transition");
+            EditorGUILayout.Slider(causticsDispersion, 0, 10, "Caustics Dispersion");
+            causticsSpeed.vector2Value = EditorGUILayout.Vector2Field("Caustics Speed", causticsSpeed.vector2Value);
         }
     }
 }

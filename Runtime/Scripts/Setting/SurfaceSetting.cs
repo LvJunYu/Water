@@ -36,6 +36,7 @@ namespace LYU.WaterSystem.Data
         public Vector2 speed3 = new Vector2(-2, -2);
 
         public float distort = 1f;
+        public float dispersion = 1f;
         public float edge = 1f;
         public float specularClamp = 1024;
         public float waterMaxVisibility = 20.0f;
@@ -164,7 +165,15 @@ namespace LYU.WaterSystem.Data
 
             material.SetTexture(AbsorptionScatteringRamp, _rampTexture);
             material.SetVector(_SurfaceParam2, new Vector4(edge, specularClamp, specularIntensity, distort));
-            material.SetFloat(_SpecularRange, specularRange);
+            material.SetVector(_SurfaceParam3, new Vector4(specularRange, dispersion));
+            if (dispersion > 0)
+            {
+                material.EnableKeyword("_Refraction_Dispersion_Enable");
+            }
+            else
+            {
+                material.DisableKeyword("_Refraction_Dispersion_Enable");
+            }
 
             if (additionColor)
             {
@@ -246,11 +255,11 @@ namespace LYU.WaterSystem.Data
 
         private static readonly int _SurfaceParam = Shader.PropertyToID("_SurfaceParam");
         private static readonly int _SurfaceParam2 = Shader.PropertyToID("_SurfaceParam2");
+        private static readonly int _SurfaceParam3 = Shader.PropertyToID("_SurfaceParam3");
         private static readonly int _SurfaceParam4 = Shader.PropertyToID("_SurfaceParam4");
         private static readonly int _SurfaceParam5 = Shader.PropertyToID("_SurfaceParam5");
         private static readonly int _ShallowColor = Shader.PropertyToID("_ShallowColor");
         private static readonly int _DeepColor = Shader.PropertyToID("_DeepColor");
-        private static readonly int _SpecularRange = Shader.PropertyToID("_HModifier");
         private static readonly int _AdditionRange = Shader.PropertyToID("_AdditionRange");
         private static readonly int _AdditionColor1 = Shader.PropertyToID("_AdditionColor1");
         private static readonly int _AdditionColor2 = Shader.PropertyToID("_AdditionColor2");
