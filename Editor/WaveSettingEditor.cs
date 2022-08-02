@@ -10,7 +10,7 @@ namespace LYU.WaterSystem.Data
     [CustomPropertyDrawer(typeof(WaveSetting))]
     public class WaveSettingEditor : BaseWaterSettingEditor
     {
-        protected override string settingsText => "海浪设置";
+        protected override string settingsText => "Wave Setting";
 
         protected override void Draw(SerializedProperty property)
         {
@@ -24,18 +24,18 @@ namespace LYU.WaterSystem.Data
             var speedRandom = property.FindPropertyRelative("speedRandom");
             var sharpness = property.FindPropertyRelative("sharpness");
 
-            waveEnable.boolValue = EditorGUILayout.Toggle("海浪开关", waveEnable.boolValue);
+            waveEnable.boolValue = EditorGUILayout.Toggle("Wave Enable", waveEnable.boolValue);
             // Wave count (display warning of on mobile platform and over 6) dropdown  1 > 10
             EditorGUILayout.IntSlider(autoCount, 1, WaveSetting.MaxWaveCount, waveCountStr, null);
             // if (autoCount.intValue > 7)
             //     EditorGUILayout.HelpBox("移动平台建议叠加浪的个数不要过多" , MessageType.Info);
             EditorGUILayout.Slider(avgHeight, 0.01f, 10.0f, waveHeightStr, null);
             EditorGUILayout.Slider(avgWavelength, 1.0f, 100.0f, waveLengthStr, null);
-            EditorGUILayout.Slider(waveSpeed, 0f, 3f, "速度");
+            EditorGUILayout.Slider(waveSpeed, 0f, 3f, "Wave Speed");
             EditorGUI.indentLevel++;
-            EditorGUILayout.Slider(speedRandom, 0f, 1f, "速度随机程度");
+            EditorGUILayout.Slider(speedRandom, 0f, 1f, "Wave Speed Random");
             EditorGUI.indentLevel--;
-            EditorGUILayout.Slider(sharpness, 0f, 10f, "波峰尖锐程度");
+            EditorGUILayout.Slider(sharpness, 0f, 10f, "Wave Sharpness");
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.Slider(windDir, -180.0f, 180.0f, windDirStr, null);
             if (GUILayout.Button(windButtonStr))
@@ -45,7 +45,7 @@ namespace LYU.WaterSystem.Data
             EditorGUILayout.BeginHorizontal();
             var randSeed = property.FindPropertyRelative("randomSeed");
             randSeed.intValue = EditorGUILayout.IntField(randomSeedStr, randSeed.intValue);
-            if (GUILayout.Button("重新随机"))
+            if (GUILayout.Button("Random"))
                 randSeed.intValue = DateTime.Now.Millisecond * 100 - DateTime.Now.Millisecond;
             EditorGUILayout.EndHorizontal();
             if (waveEnable.boolValue)
@@ -81,25 +81,25 @@ namespace LYU.WaterSystem.Data
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(subSurfaceColor, subSurfaceColorStr);
-                EditorGUILayout.Slider(subSurfaceBase, 0f, 1f, "基础强度");
-                EditorGUILayout.Slider(subSurfaceSun, 0f, 5f, "向光方向增强");
-                EditorGUILayout.Slider(subSurfaceSunFallOff, 1f, 10f, "向光方向增强衰减");
-                EditorGUILayout.Slider(subSurfaceScale, 0f, 1f, "浪尖过度");
+                EditorGUILayout.Slider(subSurfaceBase, 0f, 1f, "SSS Intensity");
+                EditorGUILayout.Slider(subSurfaceSun, 0f, 5f, "SSS Reinforce Towards Sun");
+                EditorGUILayout.Slider(subSurfaceSunFallOff, 1f, 10f, "SSS Reinforce Range Towards Sun");
+                EditorGUILayout.Slider(subSurfaceScale, 0f, 1f, "SSS Transition");
                 // var testUv = property.FindPropertyRelative("testUv");
                 // EditorGUILayout.Slider(testUv, 0f, 1f, "测试");
                 EditorGUI.indentLevel--;
             }
         }
 
-        private static readonly GUIContent subSurfaceStr = new GUIContent("次表面散射", "增强浪尖、向光方向的散射效果");
-        private static readonly GUIContent subSurfaceColorStr = new GUIContent("次表面颜色");
+        private static readonly GUIContent subSurfaceStr = new GUIContent("SSS Enable", "增强浪尖、向光方向的散射效果");
+        private static readonly GUIContent subSurfaceColorStr = new GUIContent("SSS Color");
 
-        private static readonly GUIContent windButtonStr = new GUIContent("朝Screen相机方向", alignButtonTT);
-        private static readonly GUIContent windDirStr = new GUIContent("风向", windDirTT);
-        private static readonly GUIContent waveLengthStr = new GUIContent("海浪平均宽度", avgWavelengthTT);
-        private static readonly GUIContent waveHeightStr = new GUIContent("海浪平均高度", avgHeightTT);
-        private static readonly GUIContent waveCountStr = new GUIContent("叠加波的个数", waveCountTT);
-        private static readonly GUIContent randomSeedStr = new GUIContent("随机种子", randSeedTT);
+        private static readonly GUIContent windButtonStr = new GUIContent("Towards the scene camera", alignButtonTT);
+        private static readonly GUIContent windDirStr = new GUIContent("Wind Direction", windDirTT);
+        private static readonly GUIContent waveLengthStr = new GUIContent("Wave Length", avgWavelengthTT);
+        private static readonly GUIContent waveHeightStr = new GUIContent("Wave Amplitude", avgHeightTT);
+        private static readonly GUIContent waveCountStr = new GUIContent("Wave Overlay Counts", waveCountTT);
+        private static readonly GUIContent randomSeedStr = new GUIContent("Random Seed", randSeedTT);
 
         private static string[] wavesTypeOptions =
         {

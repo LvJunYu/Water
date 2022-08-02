@@ -6,7 +6,7 @@ namespace LYU.WaterSystem.Data
     [CustomPropertyDrawer(typeof(FoamSetting))]
     public class FoamSettingEditor : BaseWaterSettingEditor
     {
-        protected override string settingsText => "泡沫设置";
+        protected override string settingsText => "Foam Setting";
 
         protected override void Draw(SerializedProperty property)
         {
@@ -21,8 +21,8 @@ namespace LYU.WaterSystem.Data
             var foamParam5 = property.FindPropertyRelative("foamParam5");
             var foamParam6 = property.FindPropertyRelative("foamParam6");
             
-            foamEnable.boolValue = EditorGUILayout.Toggle("泡沫开关", foamEnable.boolValue);
-            EditorGUILayout.Slider(foamIntensity, 0, 2, "泡沫强度");
+            foamEnable.boolValue = EditorGUILayout.Toggle("Foam Enable", foamEnable.boolValue);
+            EditorGUILayout.Slider(foamIntensity, 0, 2, "Foam Intensity");
             EditorGUILayout.PropertyField(foamColor, foamColorStr);
             foamType.intValue = GUILayout.Toolbar(foamType.intValue, foamTypeEnum);
             switch ((EFoamType) foamType.intValue)
@@ -43,10 +43,10 @@ namespace LYU.WaterSystem.Data
                     EditorGUILayout.Slider(foamParam6, 0, 10f, "Shore Wave Power");
                     EditorGUILayout.PropertyField(bakedDepthTex, bakedDepthTexStr);
                     if (!bakedDepthTex.objectReferenceValue)
-                        EditorGUILayout.HelpBox("点击Water脚本右上角【获取高度图】进行Bake\nBake前需要把海底物体的Layer设置成SeaFloor",
+                        EditorGUILayout.HelpBox("Click on the top right corner of the Water script to get the height map.\n Before Baking, you need to set the Layer of the seabed object to SeaFloor",
                             MessageType.Info);
                     EditorGUILayout.PropertyField(defaultFoamRamp, defaultFoamRampStr);
-                    ShowCurve(basicFoam, "泡沫稠密曲线");
+                    ShowCurve(basicFoam, "Foam Density Curve");
                     break;
                 case EFoamType.RiverFoam:
                     var noiseMap = property.FindPropertyRelative("noiseMap");
@@ -88,12 +88,12 @@ namespace LYU.WaterSystem.Data
             EditorGUIUtility.labelWidth = preWidth;
         }
 
-        private static readonly string[] foamTypeEnum = {"海水泡沫", "河水泡沫"};
-        private static readonly GUIContent foamColorStr = new GUIContent("泡沫颜色");
-        private static readonly GUIContent foamMapStr2 = new GUIContent("泡沫贴图(RG)");
+        private static readonly string[] foamTypeEnum = {"Sea Foam", "River Foam"};
+        private static readonly GUIContent foamColorStr = new GUIContent("Foam Color");
+        private static readonly GUIContent foamMapStr2 = new GUIContent("Foam Map(RG)");
         private static readonly GUIContent foamMapStr = new GUIContent("Foam Map(RGB)");
-        private static readonly GUIContent bakedDepthTexStr = new GUIContent("Height Map", "Editor下点击Water脚本右上角获取高度图");
+        private static readonly GUIContent bakedDepthTexStr = new GUIContent("Height Map", "Click the upper right corner of the Water script to obtain the height map");
         private static readonly GUIContent defaultFoamRampStr = new GUIContent("Foam Ramp Map");
-        private static readonly GUIContent noiseMapStr = new GUIContent("噪声图");
+        private static readonly GUIContent noiseMapStr = new GUIContent("Noise Map");
     }
 }

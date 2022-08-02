@@ -55,6 +55,13 @@ namespace LYU.WaterSystem.Data
         public int precision = 10;
         public float viscosity = 0.15f;
         public float velocity = 0.5f;
+        
+        public int raindropCount = 0;
+        public int frameInternal = 2;
+        public float testRange = 50;
+        public float testDepth = 0.1f;
+        public float maxRadius = 1f;
+        public float minRadius = 0.1f;
 
         public RippleSetting()
         {

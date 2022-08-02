@@ -114,6 +114,7 @@ namespace LYU.WaterSystem
 
         void Update()
         {
+            if (!GerstnerWavesJobs.init) return;
             for(var i = 0; i < samplePoints.Length; i++)
             {
                 samplePoints[i] = transform.TransformPoint(voxels[i]);

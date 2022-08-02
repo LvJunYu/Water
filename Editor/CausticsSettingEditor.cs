@@ -6,7 +6,7 @@ namespace LYU.WaterSystem.Data
     [CustomPropertyDrawer(typeof(CausticsSetting))]
     public class CausticsSettingEditor : BaseWaterSettingEditor
     {
-        protected override string settingsText => "焦散设置";
+        protected override string settingsText => "Caustics Setting";
 
         protected override void Draw(SerializedProperty property)
         {

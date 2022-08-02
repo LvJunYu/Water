@@ -6,7 +6,7 @@ namespace LYU.WaterSystem.Data
     [CustomPropertyDrawer(typeof(SurfaceSetting))]
     public class SurfaceSettingEditor : BaseWaterSettingEditor
     {
-        protected override string settingsText => "水面设置";
+        protected override string settingsText => "Surface Setting";
 
         protected override void Draw(SerializedProperty property)
         {
@@ -77,9 +77,9 @@ namespace LYU.WaterSystem.Data
                     EditorGUI.indentLevel++;
                     EditorGUILayout.Space();
                     EditorGUILayout.PropertyField(surfaceMap, surfaceMapStr);
-                    EditorGUILayout.Slider(bumpScale, 0f, 2f, "法线强度");
-                    EditorGUILayout.Slider(surfaceSize, 0f, 10f, "波纹大小");
-                    var speedVal = EditorGUILayout.Slider("波纹速度", speed.vector2Value.x, 0, 5);
+                    EditorGUILayout.Slider(bumpScale, 0f, 2f, "Bump Intensity");
+                    EditorGUILayout.Slider(surfaceSize, 0f, 10f, "Bump Tiling");
+                    var speedVal = EditorGUILayout.Slider("Bump Speed", speed.vector2Value.x, 0, 5);
                     speed.vector2Value = new Vector2(speedVal, speed.vector2Value.y);
                     EditorGUI.indentLevel--;
                     break;
@@ -96,7 +96,7 @@ namespace LYU.WaterSystem.Data
             EditorGUILayout.PropertyField(additionColor, additionColorStr);
             if (additionColor.boolValue)
             {
-                EditorGUILayout.Slider(additionRange, 0, 10, "补色远近范围");
+                EditorGUILayout.Slider(additionRange, 0, 10, "Additional Color Rage");
                 EditorGUILayout.PropertyField(additionColor1, additionColor1Str);
                 EditorGUILayout.PropertyField(additionColor2, additionColor2Str);
             }
@@ -114,8 +114,8 @@ namespace LYU.WaterSystem.Data
                 case EScartterType.Detail:
                     EditorGUILayout.PropertyField(absorptionRamp, absorptionRampStr, true, null);
                     EditorGUILayout.PropertyField(scatterRamp, scatterRampStr, true, null);
-                    EditorGUILayout.HelpBox("水面颜色 = 水底折射 * 吸收颜色 + 散射颜色\n" +
-                                            "颜色条带代表深度从浅到深的颜色变化，最右的深度值对应参数【最大深度】", MessageType.Info);
+                    EditorGUILayout.HelpBox("Surface Color = Refraction * Absorbed Color + Scattering Color\n" +
+                                            "The strip represents color change with water depth, and the right-most depth value is [maximum depth]", MessageType.Info);
                     break;
             }
 
@@ -142,15 +142,15 @@ namespace LYU.WaterSystem.Data
                 EditorGUI.indentLevel++;
                 //EditorGUILayout.Slider(flowMapTiling, 0f, 100f, "流向图Tiling");
                 EditorGUILayout.PropertyField(flowNormal, flowNormalStr);
-                EditorGUILayout.Slider(flowMapScale, -10.0f, 10.0f, "流向图强度");
-                EditorGUILayout.Slider(flowNormalSize, 0, 1, "流向法线大小");
-                EditorGUILayout.Slider(flowSpeed, 0, 1, "流向图速度");
+                EditorGUILayout.Slider(flowMapScale, -10.0f, 10.0f, "Flow Intensity");
+                EditorGUILayout.Slider(flowNormalSize, 0, 1, "Flow Bump Tiling");
+                EditorGUILayout.Slider(flowSpeed, 0, 1, "Flow Speed");
                 EditorGUILayout.Space();
                 EditorGUILayout.PropertyField(foamMap, foamMapStr);
-                EditorGUILayout.Slider(foamIntensity, 0, 100, "白沫Intensity");
-                EditorGUILayout.Slider(foamMetallic, 0, 1, "白沫金属度");
-                EditorGUILayout.Slider(foamSpecular, 0, 1, "白沫高光");
-                EditorGUILayout.Slider(foamSmoothness, 0, 1, "白沫粗糙度");
+                EditorGUILayout.Slider(foamIntensity, 0, 100, "Foam Intensity");
+                EditorGUILayout.Slider(foamMetallic, 0, 1, "Foam Metal");
+                EditorGUILayout.Slider(foamSpecular, 0, 1, "Foam Specular");
+                EditorGUILayout.Slider(foamSmoothness, 0, 1, "Foam Smoothness");
                 EditorGUILayout.PropertyField(foamColor, foamColorStr);
                 EditorGUI.indentLevel--;
             }
@@ -158,23 +158,23 @@ namespace LYU.WaterSystem.Data
 
         private static readonly GUIContent surfaceMapStr = new GUIContent("Bump Map(XY)", "Bump Map(XY)");
 
-        private static readonly GUIContent flowMapStr = new GUIContent("流向图");
-        private static readonly GUIContent flowNormalStr = new GUIContent("流向法线");
-        private static readonly GUIContent foamMapStr = new GUIContent("白沫图");
-        private static readonly GUIContent foamColorStr = new GUIContent("白沫颜色");
+        private static readonly GUIContent flowMapStr = new GUIContent("Flow Map");
+        private static readonly GUIContent flowNormalStr = new GUIContent("Flow Bump");
+        private static readonly GUIContent foamMapStr = new GUIContent("Foam Map");
+        private static readonly GUIContent foamColorStr = new GUIContent("Foam Color");
 
-        private static readonly GUIContent waterMaxVisibilityStr = new GUIContent("最大深度", maxDepthTT);
-        private static readonly GUIContent absorptionRampStr = new GUIContent("吸收颜色", absorpRampTT);
-        private static readonly GUIContent scatterRampStr = new GUIContent("散射颜色", scatterRampTT);
+        private static readonly GUIContent waterMaxVisibilityStr = new GUIContent("Max Depth", maxDepthTT);
+        private static readonly GUIContent absorptionRampStr = new GUIContent("Absorbed Color", absorpRampTT);
+        private static readonly GUIContent scatterRampStr = new GUIContent("Scattering Color", scatterRampTT);
 
         private static readonly GUIContent tripleNormalMapStr = new GUIContent("Enable Bump 3");
-        private static readonly GUIContent shallowColorStr = new GUIContent("浅水颜色");
-        private static readonly GUIContent deepColorStr = new GUIContent("深水颜色");
-        private static readonly GUIContent additionColorStr = new GUIContent("是否使用补色");
-        private static readonly GUIContent additionColor1Str = new GUIContent("近处颜色");
-        private static readonly GUIContent additionColor2Str = new GUIContent("远处颜色");
-        private static readonly string[] bumpTypeEnum = {"法线贴图", "流向图"};
-        private static readonly string[] scartterTypeEnum = {"简单散射", "细节散射"};
+        private static readonly GUIContent shallowColorStr = new GUIContent("Shallow Color");
+        private static readonly GUIContent deepColorStr = new GUIContent("Deep Color");
+        private static readonly GUIContent additionColorStr = new GUIContent("Additional Color Enable");
+        private static readonly GUIContent additionColor1Str = new GUIContent("Near Color");
+        private static readonly GUIContent additionColor2Str = new GUIContent("Far Color");
+        private static readonly string[] bumpTypeEnum = {"Bump Map", "Flow Map"};
+        private static readonly string[] scartterTypeEnum = {"Simply", "Advanced"};
 
         private const string maxDepthTT =
             "This controls the max depth of the waters transparency/visiblility, the absorption and scattering gradients map to this depth. Units:Meters";

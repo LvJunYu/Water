@@ -143,7 +143,7 @@ namespace LYU.WaterSystem.Data
                 count++;
             }
 
-            // count = Test(count);
+            count = Test(count);
             return count;
         }
 
@@ -233,21 +233,24 @@ namespace LYU.WaterSystem.Data
         private static readonly int _RippleParam = Shader.PropertyToID("_RippleParam");
         private static readonly int RippleLiquidParams = Shader.PropertyToID("_RippleLiquidParams");
 
-        private int _testCount = 1;
-        private int _frameInternal = 2;
-        private float _testRange = 20;
-        private float _maxRadius = 0.2f;
-        private float _minRadius = 0.01f;
+        // private int _testCount = 1;
+        // private int _frameInternal = 2;
+        // private float _testRange = 50;
+        // private float _maxRadius = 1f;
+        // private float _minRadius = 0.1f;
         private int _texSize = 512;
 
         private int Test(int count)
         {
-            if (Time.frameCount % _frameInternal != 0) return count;
-            for (var i = 0; i < _testCount; i++)
+            if (Time.frameCount % _setting.frameInternal != 0) return count;
+            for (var i = 0; i < _setting.raindropCount; i++)
             {
                 if (count >= _setting.maxRippleCount) break;
-                _dataArray[count] = new Vector4(Random.Range(-_testRange, _testRange), Random.Range(-1, 1),
-                    Random.Range(-_testRange, _testRange), Random.Range(_minRadius, _maxRadius));
+                _dataArray[count] = new Vector4(
+                    Random.Range(_setting.center.x - _setting.testRange, _setting.center.x + _setting.testRange),
+                    Random.Range(_setting._waterLevel - _setting.testDepth, _setting._waterLevel + _setting.testDepth),
+                    Random.Range(_setting.center.y - _setting.testRange, _setting.center.y + _setting.testRange),
+                    Random.Range(_setting.minRadius, _setting.maxRadius));
                 count++;
             }
 

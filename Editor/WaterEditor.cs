@@ -18,22 +18,22 @@ namespace LYU.WaterSystem
         {
             serializedObject.Update();
             Water w = (Water) target;
+            bool waterDataChanged = false;
             EditorGUI.BeginChangeCheck();
             var waterRangeData = serializedObject.FindProperty("waterRangeData");
             EditorGUILayout.PropertyField(waterRangeData);
             if (EditorGUI.EndChangeCheck())
             {
-                serializedObject.ApplyModifiedProperties();
-                w.CaptureDepthMap();
+                waterDataChanged = true;
             }
             
+            bool materialChanged = false;
             EditorGUI.BeginChangeCheck();
             var waterMaterial = serializedObject.FindProperty("waterMaterial");
             EditorGUILayout.PropertyField(waterMaterial);
             if (EditorGUI.EndChangeCheck())
             {
-                serializedObject.ApplyModifiedProperties();
-                w.SetMaterial();
+                materialChanged = true;
             }
 
             var seaSettingsData = serializedObject.FindProperty("settingsData");
@@ -62,7 +62,16 @@ namespace LYU.WaterSystem
             // EditorGUILayout.PropertyField(seaMaterial, new GUIContent("Water Material"));
 
             serializedObject.ApplyModifiedProperties();
+            if (waterDataChanged)
+            {
+                w.CaptureDepthMap();
+            }
 
+            if (materialChanged)
+            {
+                w.SetMaterial();
+            }
+            
             if (GUI.changed)
             {
                 w.Refresh();
