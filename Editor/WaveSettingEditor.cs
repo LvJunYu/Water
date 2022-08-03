@@ -94,7 +94,7 @@ namespace LYU.WaterSystem.Data
         private static readonly GUIContent subSurfaceStr = new GUIContent("SSS Enable", "增强浪尖、向光方向的散射效果");
         private static readonly GUIContent subSurfaceColorStr = new GUIContent("SSS Color");
 
-        private static readonly GUIContent windButtonStr = new GUIContent("Towards the scene camera", alignButtonTT);
+        private static readonly GUIContent windButtonStr = new GUIContent("Scene Dir", alignButtonTT);
         private static readonly GUIContent windDirStr = new GUIContent("Wind Direction", windDirTT);
         private static readonly GUIContent waveLengthStr = new GUIContent("Wave Length", avgWavelengthTT);
         private static readonly GUIContent waveHeightStr = new GUIContent("Wave Amplitude", avgHeightTT);

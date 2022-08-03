@@ -23,7 +23,7 @@ namespace LYU.WaterSystem
         private static float _peak;
         private static float _speed;
 
-        private static float _waterLevel;
+        public static float _waterLevel;
         //Details for Buoyant Objects
         static NativeArray<float3> positions;
         static int positionCount = 0;

@@ -57,6 +57,7 @@ namespace LYU.WaterSystem.Data
             InitTextures(_texSize);
             _pre = _rt1;
             _cur = _rt2;
+            RenderPipelineManager.beginFrameRendering -= RenderPipelineManagerOnBeginFrameRendering;
             RenderPipelineManager.beginFrameRendering += RenderPipelineManagerOnBeginFrameRendering;
         }
 

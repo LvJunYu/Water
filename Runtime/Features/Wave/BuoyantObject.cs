@@ -23,6 +23,8 @@ namespace LYU.WaterSystem
         public float voxelResolution = 0.51f; // voxel resolution, represents the half size of a voxel when creating the voxel representation
         private Bounds voxelBounds; // bounds of the voxels
         public Vector3 centerOfMass = Vector3.zero; // Center Of Mass offset
+        [Range(0, 1)] public float stability;
+        public float heightOffset;
 
         private const float DAMPFER = 0.005f;
         private const float WATER_DENSITY = 1000;
@@ -133,9 +135,12 @@ namespace LYU.WaterSystem
                 if(_buoyancyType == BuoyancyType.NonPhysical)
                 {
                     Vector3 vec  = transform.position;
-                    vec.y = heights[0].y;
+                    vec.y = Mathf.Lerp(heights[0].y, GerstnerWavesJobs._waterLevel, stability) + heightOffset;
                     transform.position = vec;
-                    transform.up = Vector3.Slerp(transform.up, normals[0], Time.deltaTime);
+                    var up = transform.up;
+                    Vector3 normal = Vector3.Slerp(normals[0], up, stability);
+                    up = Vector3.Slerp(up, normal, Time.deltaTime);
+                    transform.up = up;
                 }
                 else if(_buoyancyType == BuoyancyType.NonPhysicalVoxel)
                 {

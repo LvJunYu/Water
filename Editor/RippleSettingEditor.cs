@@ -69,7 +69,7 @@ namespace LYU.WaterSystem.Data
                     EditorGUILayout.PropertyField(center, centerStr);
                     EditorGUILayout.IntSlider(rippleRange, 1, 100, "Area Range (meter)");
                     EditorGUILayout.IntSlider(precision, 2, 10, "Precision (pixels per meter)");
-                    EditorGUILayout.Slider(viscosity, 0, 10, "Viscosity");
+                    EditorGUILayout.Slider(viscosity, 0, 1, "Viscosity");
                     EditorGUILayout.Slider(velocity, 0, 0.99f, "Velocity");
                     
                     // raindrop
