@@ -1,9 +1,10 @@
 # Water System For URP.
-
+Water system designed for mobile platforms, fully integrated into the Unity URP Pipeline, and packed with different features and tools.
 ![](Documentation~/Water2.png)
 ![](Documentation~/Water3.gif)
 
 ## Features
+[Development Log](https://jojo-lyu.notion.site/Dev-Log-Water-6566510c7cea429d83263e5184f46413?pvs=4)
 - [x]  Reflection
 - [x]  Refraction
 - [x]  Color Adjust
