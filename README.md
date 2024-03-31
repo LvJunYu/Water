@@ -17,7 +17,7 @@ Water system designed for mobile platforms, fully integrated into the Unity URP 
 - [x]  Caustics Dispersion
 - [ ]  Under Water
 - [x]  SSS
-- [ ]  Water Fall
+- [ ]  Waterfall
 - [ ]  FFT
 
 # References
